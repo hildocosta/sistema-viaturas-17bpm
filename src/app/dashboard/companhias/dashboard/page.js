@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/Sidebar/page";
+import Sidebar from "@/components/sidebar/page";
 import { 
   Building2, 
   Car, 

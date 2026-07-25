@@ -92,7 +92,7 @@ export default function Sidebar() {
           </div>
 
           {/* Divisor com Efeito Gradiente Neon */}
-          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-500/40 to-transparent" />
         </div>
 
         {/* Grupos de Links do Menu */}
@@ -136,7 +136,7 @@ export default function Sidebar() {
       {/* Rodapé da Sidebar - Usuário & Sair */}
       <div className="relative pt-4">
         {/* Divisor Superior do Rodapé com Efeito Gradiente */}
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
 
         <div className="flex items-center justify-between px-3 py-2 bg-slate-950/60 border border-slate-800/80 rounded-xl">
           <div className="min-w-0">
