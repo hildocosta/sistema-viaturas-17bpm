@@ -11,18 +11,16 @@ import {
   Plus, 
   Gauge, 
   Building2, 
-  FileText, 
-  ShieldAlert, 
-  CheckCircle2, 
   Calendar,
   X,
   User,
-  Loader2
+  Loader2,
+  Eye,
+  FileText
 } from "lucide-react";
 import Link from "next/link";
 
 export default function ProntuarioViaturaPage({ params }) {
-  // Desembrulhando params do Next.js App Router
   const resolvedParams = use(params);
   const id = resolvedParams.id;
 
@@ -30,16 +28,19 @@ export default function ProntuarioViaturaPage({ params }) {
   const [historico, setHistorico] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Estado do Modal de Novo Evento
+  // Estado do Modal de Cadastro de Evento
   const [modalAberto, setModalAberto] = useState(false);
   const [novoEvento, setNovoEvento] = useState({
-    tipo: "Manutençao",
+    tipo: "Manutenção",
     titulo: "",
     descricao: "",
     custo: "",
     responsavel: "",
     novoKm: ""
   });
+
+  // Estado do Modal de Visualização de Evento Selecionado
+  const [eventoSelecionado, setEventoSelecionado] = useState(null);
 
   useEffect(() => {
     async function carregarDados() {
@@ -53,7 +54,7 @@ export default function ProntuarioViaturaPage({ params }) {
         setViatura(data.viatura);
         setHistorico(data.historico);
       } catch (err) {
-        // Mock de Contingência para o Viatura ID especificado
+        // Mock de Contingência para Desenvolvimento Operacional
         setViatura({
           id: id,
           prefixo: "L0117",
@@ -70,9 +71,9 @@ export default function ProntuarioViaturaPage({ params }) {
           {
             id: "h1",
             data: "2026-07-20T10:30:00Z",
-            tipo: "Manutençao",
+            tipo: "Manutenção",
             titulo: "Troca de Óleo e Filtro de Óleo",
-            descricao: "Realizada manutenção preventiva dos 30.000km em oficina credenciada.",
+            descricao: "Realizada manutenção preventiva dos 30.000km em oficina credenciada. Substituído o filtro de combustível, filtro de ar do motor e adicionado óleo sintético 5W30 conforme especificações do fabricante.",
             custo: 850.00,
             responsavel: "Sgt. Silva (P4)",
             kmRegistrado: 34200
@@ -80,9 +81,9 @@ export default function ProntuarioViaturaPage({ params }) {
           {
             id: "h2",
             data: "2026-05-10T14:15:00Z",
-            tipo: "Inspecao",
+            tipo: "Inspeção",
             titulo: "Inspeção Trimestral de Viatura",
-            descricao: "Sem alterações na suspensão ou motor. Pneus em bom estado.",
+            descricao: "Sem alterações na suspensão ou motor. Pneus em bom estado de conservação. Equipamentos de emergência (sirene e giroflex) operando 100%.",
             custo: 0.00,
             responsavel: "Cb. Oliveira (Garagem)",
             kmRegistrado: 31000
@@ -90,9 +91,9 @@ export default function ProntuarioViaturaPage({ params }) {
           {
             id: "h3",
             data: "2026-02-15T09:00:00Z",
-            tipo: "Manutençao",
+            tipo: "Manutenção",
             titulo: "Substituição do Jogo de Pneus Dianteiros",
-            descricao: "Troca dos 2 pneus dianteiros desgastados por uso em patrulhamento ostensivo.",
+            descricao: "Troca dos 2 pneus dianteiros desgastados por uso em patrulhamento ostensivo. Realizado alinhamento de direção e balanceamento de rodas no autocenter credenciado.",
             custo: 2450.00,
             responsavel: "Sgt. Silva (P4)",
             kmRegistrado: 27500
@@ -106,7 +107,7 @@ export default function ProntuarioViaturaPage({ params }) {
     carregarDados();
   }, [id]);
 
-  // Função para cadastrar novo evento na Linha do Tempo
+  // Função para cadastrar novo evento
   const handleSalvarEvento = (e) => {
     e.preventDefault();
     if (!novoEvento.titulo) return;
@@ -125,18 +126,15 @@ export default function ProntuarioViaturaPage({ params }) {
       kmRegistrado: kmNum
     };
 
-    // Atualiza estado local do histórico (colocando o mais recente no topo)
     setHistorico([eventoAdicionado, ...historico]);
 
-    // Atualiza o custo acumulado e o KM da viatura
     setViatura((prev) => ({
       ...prev,
       kmAtual: Math.max(prev.kmAtual, kmNum),
       custoTotalManutencao: prev.custoTotalManutencao + custoNum
     }));
 
-    // Limpa formulário e fecha o modal
-    setNovoEvento({ tipo: "Manutençao", titulo: "", descricao: "", custo: "", responsavel: "", novoKm: "" });
+    setNovoEvento({ tipo: "Manutenção", titulo: "", descricao: "", custo: "", responsavel: "", novoKm: "" });
     setModalAberto(false);
   };
 
@@ -156,8 +154,8 @@ export default function ProntuarioViaturaPage({ params }) {
 
   const getTipoColor = (tipo) => {
     switch (tipo) {
-      case "Manutençao": return "text-amber-400 bg-amber-500/10 border-amber-500/20";
-      case "Inspecao": return "text-blue-400 bg-blue-500/10 border-blue-500/20";
+      case "Manutenção": return "text-amber-400 bg-amber-500/10 border-amber-500/20";
+      case "Inspeção": return "text-blue-400 bg-blue-500/10 border-blue-500/20";
       case "Sinistro": return "text-rose-400 bg-rose-500/10 border-rose-500/20";
       default: return "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
     }
@@ -209,7 +207,6 @@ export default function ProntuarioViaturaPage({ params }) {
         {/* Ficha Técnica e Resumo de Custos */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 shrink-0">
           
-          {/* Card 1: Identificação */}
           <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -227,7 +224,6 @@ export default function ProntuarioViaturaPage({ params }) {
             </div>
           </div>
 
-          {/* Card 2: Alocação e Quilometragem */}
           <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
             <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Lotação e Uso</span>
             <div className="space-y-2 my-2">
@@ -243,7 +239,6 @@ export default function ProntuarioViaturaPage({ params }) {
             <p className="text-[11px] text-slate-500">Última atualização registrada via P4</p>
           </div>
 
-          {/* Card 3: Custo Acumulado em Manutenções */}
           <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Total Investido / Manutenção</span>
@@ -265,27 +260,34 @@ export default function ProntuarioViaturaPage({ params }) {
           <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2 shrink-0">
             <Clock size={16} className="text-blue-400" />
             Histórico Cronológico de Vida Útil
+            <span className="text-[10px] text-slate-500 font-normal">(Clique em qualquer card para ver detalhes)</span>
           </h2>
 
           <div className="flex-1 overflow-y-auto pr-2 space-y-4 container-sombrio">
             {historico.length === 0 ? (
               <p className="text-xs text-slate-500 text-center py-8">Nenhum evento registrado até o momento.</p>
             ) : (
-              historico.map((item, index) => (
+              historico.map((item) => (
                 <div key={item.id} className="relative pl-6 pb-4 border-l border-slate-800 last:border-0 last:pb-0">
                   
-                  {/* Marcador na linha */}
                   <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                   </div>
 
-                  <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 transition-all hover:border-slate-700">
+                  {/* Card do Evento Clicável */}
+                  <div 
+                    onClick={() => setEventoSelecionado(item)}
+                    className="bg-slate-900/80 border border-slate-800/80 hover:border-blue-500/50 rounded-xl p-4 transition-all cursor-pointer group shadow-sm hover:shadow-md hover:shadow-blue-500/5"
+                  >
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase ${getTipoColor(item.tipo)}`}>
                           {item.tipo}
                         </span>
-                        <h3 className="text-sm font-bold text-slate-200">{item.titulo}</h3>
+                        <h3 className="text-sm font-bold text-slate-200 group-hover:text-blue-400 transition-colors flex items-center gap-1.5">
+                          {item.titulo}
+                          <Eye size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-400" />
+                        </h3>
                       </div>
                       <span className="text-[11px] text-slate-500 flex items-center gap-1 font-mono">
                         <Calendar size={12} />
@@ -293,7 +295,7 @@ export default function ProntuarioViaturaPage({ params }) {
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-400 mb-3">{item.descricao}</p>
+                    <p className="text-xs text-slate-400 mb-3 line-clamp-2">{item.descricao}</p>
 
                     <div className="flex flex-wrap items-center justify-between border-t border-slate-800/60 pt-2.5 text-[11px] text-slate-500">
                       <div className="flex items-center gap-4">
@@ -323,7 +325,7 @@ export default function ProntuarioViaturaPage({ params }) {
           </div>
         </div>
 
-        {/* Modal de Cadastro de Evento Cronológico */}
+        {/* 1. Modal de Cadastro de Novo Evento */}
         {modalAberto && (
           <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl">
@@ -332,10 +334,7 @@ export default function ProntuarioViaturaPage({ params }) {
                   <Wrench size={18} className="text-blue-500" />
                   Registrar Evento Cronológico
                 </h3>
-                <button 
-                  onClick={() => setModalAberto(false)}
-                  className="text-slate-500 hover:text-slate-300 transition-colors"
-                >
+                <button onClick={() => setModalAberto(false)} className="text-slate-500 hover:text-slate-300 transition-colors">
                   <X size={20} />
                 </button>
               </div>
@@ -348,9 +347,9 @@ export default function ProntuarioViaturaPage({ params }) {
                     onChange={(e) => setNovoEvento({ ...novoEvento, tipo: e.target.value })}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
                   >
-                    <option value="Manutençao">Manutenção / Reparo</option>
-                    <option value="Inspecao">Inspeção / Vistoria</option>
-                    <option value="Alteracao">Passagem de Plantão / Alteração</option>
+                    <option value="Manutenção">Manutenção / Reparo</option>
+                    <option value="Inspeção">Inspeção / Vistoria</option>
+                    <option value="Alteração">Passagem de Plantão / Alteração</option>
                     <option value="Sinistro">Sinistro / Avaria</option>
                   </select>
                 </div>
@@ -430,6 +429,84 @@ export default function ProntuarioViaturaPage({ params }) {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* 2. NOVO: Modal de Visualização de Detalhes do Evento */}
+        {eventoSelecionado && (
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
+              
+              {/* Header do Modal */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border uppercase ${getTipoColor(eventoSelecionado.tipo)}`}>
+                    {eventoSelecionado.tipo}
+                  </span>
+                  <span className="text-xs text-slate-500 font-mono flex items-center gap-1">
+                    <Calendar size={12} />
+                    {formatarData(eventoSelecionado.data)}
+                  </span>
+                </div>
+                <button 
+                  onClick={() => setEventoSelecionado(null)}
+                  className="text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Título do Evento */}
+              <h3 className="text-base font-bold text-white mb-4">
+                {eventoSelecionado.titulo}
+              </h3>
+
+              {/* Grid de Informações Chave */}
+              <div className="grid grid-cols-2 gap-3 mb-4 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-semibold block">Responsável</span>
+                  <span className="text-xs text-slate-200 font-medium flex items-center gap-1 mt-0.5">
+                    <User size={13} className="text-blue-400" />
+                    {eventoSelecionado.responsavel}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-semibold block">Quilometragem</span>
+                  <span className="text-xs text-slate-200 font-mono font-medium flex items-center gap-1 mt-0.5">
+                    <Gauge size={13} className="text-blue-400" />
+                    {eventoSelecionado.kmRegistrado ? `${eventoSelecionado.kmRegistrado.toLocaleString("pt-BR")} km` : "N/D"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Descrição Completa */}
+              <div className="mb-6">
+                <span className="text-[10px] text-slate-500 uppercase font-semibold block mb-1">
+                  Descrição e Observações Técnicas
+                </span>
+                <div className="bg-slate-950/40 border border-slate-800/60 rounded-xl p-3 text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto">
+                  {eventoSelecionado.descricao || "Nenhuma observação detalhada foi informada."}
+                </div>
+              </div>
+
+              {/* Rodapé com Custo e Ação */}
+              <div className="flex items-center justify-between border-t border-slate-800 pt-4">
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-semibold block">Custo Financeiro</span>
+                  <span className="text-sm font-bold font-mono text-emerald-400">
+                    {eventoSelecionado.custo > 0 ? formatarMoeda(eventoSelecionado.custo) : "Isento (Sem Custo)"}
+                  </span>
+                </div>
+
+                <button 
+                  onClick={() => setEventoSelecionado(null)}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                >
+                  Fechar
+                </button>
+              </div>
+
             </div>
           </div>
         )}

@@ -24,3 +24,29 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Customização de Scrollbar Dark/Sombria */
+.container-sombrio::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.container-sombrio::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6); /* slate-900 translúcido */
+  border-radius: 8px;
+}
+
+.container-sombrio::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+  border-radius: 8px;
+}
+
+.container-sombrio::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6; /* blue-500 ao passar o mouse */
+}
+
+/* Suporte para Firefox */
+.container-sombrio {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 rgba(15, 23, 42, 0.6);
+}
