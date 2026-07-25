@@ -41,7 +41,7 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "rotam",
       grupo: "SEDE",
-      nome: "ROTAM - Tático Móvel",
+      nome: "ROTAM",
       sigla: "ROTAM",
       cidade: "Sede / Área do Batalhão",
       comandante: "Cap. Rocha",
@@ -69,7 +69,6 @@ export default function DistribucionCompanhiasPage() {
       nome: "Patrulha Rural",
       sigla: "RURAL",
       cidade: "Zona Rural do Batalhão",
-      comandante: "Ten. Martins",
       viaturas: [
         { prefixo: "PR01", placa: "JKL4G56", modelo: "Chevrolet S10 4x4", tipo: "Rural", status: "Operacional", km: "81.000" },
       ]
@@ -79,10 +78,9 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "1cia",
       grupo: "1CIA",
-      nome: "1ª Companhia - Araucária",
+      nome: "1ª Companhia - São José dos Pinhais",
       sigla: "1ª CIA",
-      cidade: "Araucária - PR",
-      comandante: "Cap. Ribeiro",
+      cidade: "São José dos Pinhais - PR",
       viaturas: [
         { prefixo: "L0123", placa: "ABC1D23", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "45.200" },
         { prefixo: "L0126", placa: "MNO5H67", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "31.000" },
@@ -94,7 +92,6 @@ export default function DistribucionCompanhiasPage() {
       nome: "1ª Cia - Tijucas do Sul",
       sigla: "1ª CIA / TIJUCAS",
       cidade: "Tijucas do Sul - PR",
-      comandante: "Ten. Alves",
       viaturas: [
         { prefixo: "L0140", placa: "TIJ1A23", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "52.800" },
       ]
@@ -102,11 +99,10 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "1cia-cartorio",
       grupo: "1CIA",
-      nome: "1ª Cia - Cartório / Adm",
+      nome: "1ª Cia - Cartório PM",
       sigla: "1ª CIA / CARTÓRIO",
-      cidade: "Araucária - PR",
-      comandante: "Sgt. Castro",
-      viaturas: [
+      cidade: "São José dos Pinhais - PR",
+     viaturas: [
         { prefixo: "L0100", placa: "CAR9B88", modelo: "Fiat Grand Siena", tipo: "Cartório", status: "Operacional", km: "94.100" },
       ]
     },
@@ -115,10 +111,9 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "2cia",
       grupo: "2CIA",
-      nome: "2ª Companhia - Campo Largo",
+      nome: "2ª Companhia - Araucária",
       sigla: "2ª CIA",
-      cidade: "Campo Largo - PR",
-      comandante: "Cap. Mendes",
+      cidade: "Araucária - PR",
       viaturas: [
         { prefixo: "L0201", placa: "STU7J89", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "28.300" },
         { prefixo: "L0202", placa: "VWX8K90", modelo: "Renault Duster", tipo: "RPA", status: "Manutenção", km: "76.100" },
@@ -129,11 +124,10 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "3cia",
       grupo: "3CIA",
-      nome: "3ª Companhia - S.J. Pinhais",
+      nome: "3ª Companhia - Campo Largo",
       sigla: "3ª CIA",
-      cidade: "São José dos Pinhais - PR",
-      comandante: "Maj. Oliveira",
-      viaturas: [
+      cidade: "Campo Largo - PR",
+     viaturas: [
         { prefixo: "L0301", placa: "BCD0M12", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "41.800" },
       ]
     },
@@ -143,7 +137,6 @@ export default function DistribucionCompanhiasPage() {
       nome: "3ª Cia - Balsa Nova",
       sigla: "3ª CIA / BALSA NOVA",
       cidade: "Balsa Nova - PR",
-      comandante: "Ten. Duarte",
       viaturas: [
         { prefixo: "L0350", placa: "BAL2C34", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "63.000" },
       ]
@@ -151,10 +144,9 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "3cia-ferraria",
       grupo: "3CIA",
-      nome: "3ª Cia - Destacamento Ferraria",
+      nome: "3ª Cia - Ferraria",
       sigla: "3ª CIA / FERRARIA",
       cidade: "Campo Largo (Ferraria) - PR",
-      comandante: "Sgt. Lima",
       viaturas: [
         { prefixo: "L0360", placa: "FER5D67", modelo: "Renault Duster 4x4", tipo: "RPA", status: "Baixada", km: "118.000" },
       ]
@@ -164,10 +156,9 @@ export default function DistribucionCompanhiasPage() {
     {
       id: "4cia",
       grupo: "4CIA",
-      nome: "4ª Companhia",
+      nome: "4ª Companhia - Fazenda Rio Grande",
       sigla: "4ª CIA",
       cidade: "Fazenda Rio Grande - PR",
-      comandante: "Cap. Barbosa",
       viaturas: [
         { prefixo: "L0401", placa: "HIJ2O34", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "35.200" },
       ]
@@ -178,7 +169,6 @@ export default function DistribucionCompanhiasPage() {
       nome: "4ª Cia - Mandirituba",
       sigla: "4ª CIA / MANDIRITUBA",
       cidade: "Mandirituba - PR",
-      comandante: "Ten. Guimarães",
       viaturas: [
         { prefixo: "L0420", placa: "MAN8E90", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "49.000" },
       ]
@@ -189,7 +179,6 @@ export default function DistribucionCompanhiasPage() {
       nome: "4ª Cia - Agudos do Sul",
       sigla: "4ª CIA / AGUDOS DO SUL",
       cidade: "Agudos do Sul - PR",
-      comandante: "Sgt. Nunes",
       viaturas: [
         { prefixo: "L0430", placa: "AGU3F12", modelo: "Chevrolet S10", tipo: "RPA", status: "Operacional", km: "71.500" },
       ]
