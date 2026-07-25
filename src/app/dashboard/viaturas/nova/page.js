@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Sidebar from "@/components/Sidebar/page";
 import { 
   ArrowLeft, 
   ShieldAlert, 
@@ -16,12 +17,8 @@ import {
   Check,
   ChevronRight,
   ChevronLeft,
-  Wrench,
-  LayoutDashboard,
-  FileText,
-  Settings,
-  Shield
-} from 'lucide-react';
+  Wrench
+} from "lucide-react";
 
 export default function NovaViaturaPage() {
   const router = useRouter();
@@ -31,21 +28,21 @@ export default function NovaViaturaPage() {
 
   const [formData, setFormData] = useState({
     // Step 1: Identificação
-    prefixo: '',
-    tipoViatura: 'Rádio Patrulha (RPA)',
-    companhia: '1ª Cia - Araucária',
+    prefixo: "",
+    tipoViatura: "Rádio Patrulha (RPA)",
+    companhia: "1ª Cia - Araucária",
     
     // Step 2: Dados Veiculares
-    placa: '',
-    marca: '',
-    modelo: '',
+    placa: "",
+    marca: "",
+    modelo: "",
     ano: new Date().getFullYear(),
-    kmAtual: '',
-    combustivel: 'Flex',
+    kmAtual: "",
+    combustivel: "Flex",
     
     // Step 3: Estado & Observações
-    situacao: 'Operacional',
-    observacoes: ''
+    situacao: "Operacional",
+    observacoes: ""
   });
 
   const handleChange = (e) => {
@@ -71,74 +68,35 @@ export default function NovaViaturaPage() {
       setSucesso(true);
       
       setTimeout(() => {
-        router.push('/dashboard/viaturas');
+        router.push("/dashboard/viaturas");
       }, 1500);
     }, 800);
   };
 
   const steps = [
-    { id: 1, title: 'Identificação', desc: 'Dados operacionais' },
-    { id: 2, title: 'Especificações', desc: 'Dados do veículo' },
-    { id: 3, title: 'Status & Notas', desc: 'Condições e detalhes' },
+    { id: 1, title: "Identificação", desc: "Dados operacionais" },
+    { id: 2, title: "Especificações", desc: "Dados do veículo" },
+    { id: 3, title: "Status & Notas", desc: "Condições e detalhes" },
   ];
 
   return (
-    <div className="flex h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className="flex h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans p-4 gap-4 antialiased">
       
-      {/* Sidebar Fixa à Esquerda */}
-      <aside className="w-64 h-full bg-slate-900 border-r border-slate-800 p-5 flex flex-col justify-between shrink-0">
-        <div>
-          {/* Cabeçalho do BPM */}
-          <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold">
-              <Shield size={20} />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-white tracking-wider">17º BPM</h2>
-              <p className="text-[10px] text-slate-400 font-mono">GESTÃO DE FROTA</p>
-            </div>
-          </div>
-
-          {/* Menu Principal */}
-          <nav className="space-y-1">
-            <Link href="/dashboard/viaturas" className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20 font-medium text-xs transition-all">
-              <Car size={16} />
-              <span>Viaturas</span>
-            </Link>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium text-xs transition-all">
-              <LayoutDashboard size={16} />
-              <span>Painel Geral</span>
-            </a>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium text-xs transition-all">
-              <Wrench size={16} />
-              <span>Manutenções</span>
-            </a>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium text-xs transition-all">
-              <FileText size={16} />
-              <span>Relatórios P4</span>
-            </a>
-          </nav>
-        </div>
-
-        {/* Roda-pé da Sidebar */}
-        <div className="border-t border-slate-800/60 pt-4">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 font-medium text-xs transition-all">
-            <Settings size={16} />
-            <span>Configurações</span>
-          </a>
-        </div>
-      </aside>
+      {/* Sidebar Global */}
+      <div className="w-80 h-full shrink-0">
+        <Sidebar />
+      </div>
 
       {/* Conteúdo Principal (Scrollável) */}
-      <main className="flex-1 h-full overflow-y-auto p-8 container-sombrio">
-        <div className="max-w-3xl mx-auto space-y-6">
+      <main className="flex-1 h-full bg-slate-900 rounded-2xl border border-slate-800 p-6 flex flex-col overflow-y-auto container-sombrio">
+        <div className="max-w-3xl mx-auto w-full space-y-6">
           
           {/* Cabeçalho da Página */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-800">
             <div className="flex items-center gap-4">
               <Link 
                 href="/dashboard/viaturas" 
-                className="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 hover:text-blue-400 transition-all text-slate-400"
+                className="p-2 rounded-lg bg-slate-950 border border-slate-800 hover:border-slate-700 hover:text-blue-400 transition-all text-slate-400"
                 title="Voltar para a lista"
               >
                 <ArrowLeft size={20} />
@@ -154,7 +112,7 @@ export default function NovaViaturaPage() {
           </div>
 
           {/* Stepper (Progresso das Etapas) */}
-          <div className="grid grid-cols-3 gap-3 bg-slate-900 border border-slate-800 p-3 rounded-xl">
+          <div className="grid grid-cols-3 gap-3 bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
             {steps.map((step) => {
               const isCompleted = currentStep > step.id;
               const isCurrent = currentStep === step.id;
@@ -163,20 +121,20 @@ export default function NovaViaturaPage() {
                 <div 
                   key={step.id} 
                   className={`flex items-center gap-3 p-2 rounded-lg transition-all ${
-                    isCurrent ? 'bg-blue-600/10 border border-blue-500/30' : ''
+                    isCurrent ? "bg-blue-600/10 border border-blue-500/30" : ""
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${
                     isCompleted 
-                      ? 'bg-emerald-600 text-white' 
+                      ? "bg-emerald-600 text-white" 
                       : isCurrent 
-                        ? 'bg-blue-600 text-white' 
-                        : 'bg-slate-800 text-slate-500'
+                        ? "bg-blue-600 text-white" 
+                        : "bg-slate-800 text-slate-500"
                   }`}>
                     {isCompleted ? <Check size={14} /> : step.id}
                   </div>
                   <div className="hidden sm:block overflow-hidden">
-                    <p className={`text-xs font-semibold truncate ${isCurrent ? 'text-blue-400' : isCompleted ? 'text-slate-200' : 'text-slate-500'}`}>
+                    <p className={`text-xs font-semibold truncate ${isCurrent ? "text-blue-400" : isCompleted ? "text-slate-200" : "text-slate-500"}`}>
                       {step.title}
                     </p>
                     <p className="text-[10px] text-slate-500 truncate">{step.desc}</p>
@@ -199,12 +157,12 @@ export default function NovaViaturaPage() {
 
           {/* Formulário por Etapas */}
           <form onSubmit={currentStep === 3 ? handleSubmit : handleNext}>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6 min-h-[280px]">
+            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-6 mb-6 min-h-[280px]">
               
               {/* STEP 1: Identificação Operacional */}
               {currentStep === 1 && (
                 <div className="space-y-4">
-                  <h2 className="text-sm font-semibold text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800/80 pb-3">
+                  <h2 className="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800/80 pb-3">
                     <ShieldAlert size={16} /> Etapa 1: Identificação Operacional
                   </h2>
 
@@ -220,7 +178,7 @@ export default function NovaViaturaPage() {
                           placeholder="Ex: L0123 / M-1701"
                           value={formData.prefixo}
                           onChange={handleChange}
-                          className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 uppercase placeholder:text-slate-600"
+                          className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 uppercase placeholder:text-slate-600"
                         />
                       </div>
                     </div>
@@ -231,7 +189,7 @@ export default function NovaViaturaPage() {
                         name="tipoViatura"
                         value={formData.tipoViatura}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
                       >
                         <option value="Rádio Patrulha (RPA)">Rádio Patrulha (RPA)</option>
                         <option value="ROTAM">ROTAM</option>
@@ -249,7 +207,7 @@ export default function NovaViaturaPage() {
                           name="companhia"
                           value={formData.companhia}
                           onChange={handleChange}
-                          className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
+                          className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
                         >
                           <option value="1ª Cia - Araucária">1ª Cia - Araucária</option>
                           <option value="2ª Cia - Campo Largo">2ª Cia - Campo Largo</option>
@@ -265,7 +223,7 @@ export default function NovaViaturaPage() {
               {/* STEP 2: Especificações Veiculares */}
               {currentStep === 2 && (
                 <div className="space-y-4">
-                  <h2 className="text-sm font-semibold text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800/80 pb-3">
+                  <h2 className="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800/80 pb-3">
                     <Car size={16} /> Etapa 2: Especificações Veiculares
                   </h2>
 
@@ -279,7 +237,7 @@ export default function NovaViaturaPage() {
                         placeholder="ABC1D23"
                         value={formData.placa}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 uppercase placeholder:text-slate-600"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 uppercase placeholder:text-slate-600"
                       />
                     </div>
 
@@ -292,7 +250,7 @@ export default function NovaViaturaPage() {
                         placeholder="Ex: Renault"
                         value={formData.marca}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
                       />
                     </div>
 
@@ -305,7 +263,7 @@ export default function NovaViaturaPage() {
                         placeholder="Ex: Duster Oroch"
                         value={formData.modelo}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
                       />
                     </div>
 
@@ -321,7 +279,7 @@ export default function NovaViaturaPage() {
                           max={new Date().getFullYear() + 1}
                           value={formData.ano}
                           onChange={handleChange}
-                          className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
+                          className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
                         />
                       </div>
                     </div>
@@ -337,7 +295,7 @@ export default function NovaViaturaPage() {
                           placeholder="Ex: 45200"
                           value={formData.kmAtual}
                           onChange={handleChange}
-                          className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
+                          className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
                         />
                       </div>
                     </div>
@@ -350,7 +308,7 @@ export default function NovaViaturaPage() {
                           name="combustivel"
                           value={formData.combustivel}
                           onChange={handleChange}
-                          className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
+                          className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
                         >
                           <option value="Flex">Flex (Gasolina/Etanol)</option>
                           <option value="Diesel">Diesel S10</option>
@@ -366,7 +324,7 @@ export default function NovaViaturaPage() {
               {/* STEP 3: Status & Observações */}
               {currentStep === 3 && (
                 <div className="space-y-4">
-                  <h2 className="text-sm font-semibold text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800/80 pb-3">
+                  <h2 className="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800/80 pb-3">
                     <Wrench size={16} /> Etapa 3: Condições Iniciais e Observações
                   </h2>
 
@@ -377,7 +335,7 @@ export default function NovaViaturaPage() {
                         name="situacao"
                         value={formData.situacao}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500"
                       >
                         <option value="Operacional">Operacional (Pronta para patrulhamento)</option>
                         <option value="Baixada">Baixada / Garagem</option>
@@ -393,7 +351,7 @@ export default function NovaViaturaPage() {
                         placeholder="Informe detalhes sobre equipamentos instalados (giroflex, radiocomunicação, blindagem) ou avarias mecânicas/estéticas iniciais..."
                         value={formData.observacoes}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600 resize-none"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600 resize-none"
                       />
                     </div>
                   </div>
@@ -408,7 +366,7 @@ export default function NovaViaturaPage() {
                 type="button"
                 onClick={handleBack}
                 disabled={currentStep === 1}
-                className="px-4 py-2 rounded-lg border border-slate-800 text-slate-400 text-sm hover:bg-slate-900 disabled:opacity-30 disabled:hover:bg-transparent transition-all flex items-center gap-1.5"
+                className="px-4 py-2 rounded-lg border border-slate-800 text-slate-400 text-sm hover:bg-slate-950 disabled:opacity-30 disabled:hover:bg-transparent transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <ChevronLeft size={16} /> Anterior
               </button>
@@ -417,7 +375,7 @@ export default function NovaViaturaPage() {
                 {currentStep < 3 ? (
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm transition-all flex items-center gap-1.5 shadow-lg shadow-blue-900/20"
+                    className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm transition-all flex items-center gap-1.5 shadow-lg shadow-blue-900/20 cursor-pointer"
                   >
                     Próximo <ChevronRight size={16} />
                   </button>
@@ -425,9 +383,9 @@ export default function NovaViaturaPage() {
                   <button
                     type="submit"
                     disabled={loading || sucesso}
-                    className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800 text-white font-medium text-sm transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2"
+                    className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800 text-white font-medium text-sm transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2 cursor-pointer"
                   >
-                    {loading ? 'Finalizando...' : 'Concluir Cadastro'}
+                    {loading ? "Finalizando..." : "Concluir Cadastro"}
                   </button>
                 )}
               </div>

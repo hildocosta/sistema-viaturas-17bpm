@@ -1,58 +1,158 @@
 "use client";
 
 import React from "react";
-import { 
-  Car, 
-  LayoutDashboard, 
-  Shield, 
-  FileText, 
-  Wrench, 
-  Settings 
-} from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { 
+  LayoutDashboard, 
+  Car, 
+  Building2,
+  BarChart3,
+  PlusCircle, 
+  Wrench, 
+  ShieldCheck, 
+  LogOut,
+  ChevronRight
+} from "lucide-react";
 
 export default function Sidebar() {
+  const pathname = usePathname();
+
+  const isRouteActive = (route) => {
+    if (
+      route === "/dashboard" || 
+      route === "/dashboard/viaturas" || 
+      route === "/dashboard/companhias" ||
+      route === "/dashboard/companhias/dashboard"
+    ) {
+      return pathname === route;
+    }
+    return pathname.startsWith(route);
+  };
+
+  const menuItems = [
+    {
+      titulo: "Visão Geral",
+      itens: [
+        {
+          nome: "Painel Principal",
+          icone: LayoutDashboard,
+          href: "/dashboard"
+        }
+      ]
+    },
+    {
+      titulo: "Gestão de Frota",
+      itens: [
+        {
+          nome: "Lista de Viaturas",
+          icone: Car,
+          href: "/dashboard/viaturas"
+        },
+        {
+          nome: "Distribuição por Cia",
+          icone: Building2,
+          href: "/dashboard/companhias"
+        },
+        {
+          nome: "Dashboard Cias",
+          icone: BarChart3,
+          href: "/dashboard/companhias/dashboard"
+        },
+        {
+          nome: "Nova Viatura",
+          icone: PlusCircle,
+          href: "/dashboard/viaturas/nova"
+        }
+      ]
+    },
+    {
+      titulo: "Manutenção & O.S.",
+      itens: [
+        {
+          nome: "Ordens de Serviço",
+          icone: Wrench,
+          href: "/dashboard/manutencoes"
+        }
+      ]
+    }
+  ];
+
   return (
-    <aside className="h-full w-full bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+    <aside className="w-full h-full bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between container-sombrio select-none">
       <div>
-        {/* Cabeçalho do BPM */}
-        <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold">
-            <Shield size={20} />
+        {/* Cabeçalho / Logo do Sistema */}
+        <div className="flex items-center gap-3 px-2 py-3 mb-5 relative">
+          <div className="p-2.5 bg-blue-600/10 border border-blue-500/20 rounded-xl text-blue-500 shadow-sm shadow-blue-500/10">
+            <ShieldCheck size={22} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wider">17º BPM</h2>
-            <p className="text-[10px] text-slate-400 font-mono">GESTÃO DE FROTA</p>
+            <h1 className="text-sm font-bold text-white tracking-tight">FrotaPol</h1>
+            <p className="text-[10px] text-slate-400 font-mono">Gestão Operacional</p>
           </div>
+
+          {/* Divisor com Efeito Gradiente Neon */}
+          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
         </div>
 
-        {/* Menu Principal */}
-        <nav className="space-y-1">
-          <Link href="/dashboard/viaturas" className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20 font-medium text-xs transition-all">
-            <Car size={16} />
-            <span>Viaturas</span>
-          </Link>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium text-xs transition-all">
-            <LayoutDashboard size={16} />
-            <span>Painel Geral</span>
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium text-xs transition-all">
-            <Wrench size={16} />
-            <span>Manutenções</span>
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium text-xs transition-all">
-            <FileText size={16} />
-            <span>Relatórios P4</span>
-          </a>
-        </nav>
+        {/* Grupos de Links do Menu */}
+        <div className="space-y-5">
+          {menuItems.map((grupo, gIdx) => (
+            <div key={gIdx}>
+              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                {grupo.titulo}
+              </p>
+              
+              <nav className="space-y-1">
+                {grupo.itens.map((item, iIdx) => {
+                  const Icone = item.icone;
+                  const ativo = isRouteActive(item.href);
+
+                  return (
+                    <Link key={iIdx} href={item.href} className="block">
+                      <div
+                        className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                          ativo
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-950/60"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icone size={17} className={ativo ? "text-white" : "text-slate-400"} />
+                          <span>{item.nome}</span>
+                        </div>
+
+                        {ativo && <ChevronRight size={14} className="text-white/80" />}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Roda-pé da Sidebar */}
-      <div className="border-t border-slate-800/60 pt-4">
-        <a href="#" className="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 font-medium text-xs transition-all">
-          <Settings size={16} />
-          <span>Configurações</span>
-        </a>
+      {/* Rodapé da Sidebar - Usuário & Sair */}
+      <div className="relative pt-4">
+        {/* Divisor Superior do Rodapé com Efeito Gradiente */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
+
+        <div className="flex items-center justify-between px-3 py-2 bg-slate-950/60 border border-slate-800/80 rounded-xl">
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-slate-200 truncate">1º Sgt. Silva</p>
+            <p className="text-[10px] text-slate-500 truncate">Gestor de Frota</p>
+          </div>
+
+          <Link href="/">
+            <button 
+              title="Sair do Sistema"
+              className="p-1.5 hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 rounded-lg transition-colors cursor-pointer"
+            >
+              <LogOut size={16} />
+            </button>
+          </Link>
+        </div>
       </div>
     </aside>
   );

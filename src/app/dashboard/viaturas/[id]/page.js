@@ -19,6 +19,8 @@ import {
   FileText
 } from "lucide-react";
 import Link from "next/link";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function ProntuarioViaturaPage({ params }) {
   const resolvedParams = use(params);
@@ -161,6 +163,128 @@ export default function ProntuarioViaturaPage({ params }) {
     }
   };
 
+  // Função para gerar e baixar o relatório em PDF
+  const handleGerarPDF = () => {
+    if (!viatura) return;
+
+    const doc = new jsPDF();
+    const dataEmissao = new Date().toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    // Cabeçalho Oficial
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(0, 0, 210, 32, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("PRONTUÁRIO OPERACIONAL DE VIATURA", 14, 16);
+
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.text(`Emitido em: ${dataEmissao} | Sistema P4`, 14, 24);
+
+    // Bloco de Informações do Veículo
+    doc.setTextColor(30, 41, 59); // slate-800
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("1. Ficha Técnica do Veículo", 14, 42);
+
+    const dadosViatura = [
+      [
+        `Prefixo: ${viatura.prefixo}`,
+        `Placa: ${viatura.placa}`,
+        `Modelo: ${viatura.modelo}`
+      ],
+      [
+        `Ano: ${viatura.ano}`,
+        `KM Atual: ${viatura.kmAtual.toLocaleString("pt-BR")} km`,
+        `Subunidade: ${viatura.subunidade}`
+      ],
+      [
+        `Status: ${viatura.status}`,
+        `Investimento Total: ${formatarMoeda(viatura.custoTotalManutencao)}`,
+        `Registros no Histórico: ${historico.length}`
+      ]
+    ];
+
+    autoTable(doc, {
+      startY: 46,
+      body: dadosViatura,
+      theme: "plain",
+      styles: { fontSize: 9, cellPadding: 3 },
+      columnStyles: {
+        0: { fontStyle: "bold", cellWidth: 60 },
+        1: { cellWidth: 60 },
+        2: { cellWidth: 70 }
+      }
+    });
+
+    // Tabela do Histórico
+    const startYHistorico = doc.lastAutoTable.finalY + 10;
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(30, 41, 59);
+    doc.text("2. Histórico Cronológico de Manutenções e Eventos", 14, startYHistorico);
+
+    const tableRows = historico.map((item) => [
+      formatarData(item.data),
+      item.tipo,
+      `${item.titulo}\n${item.descricao}`,
+      item.kmRegistrado ? `${item.kmRegistrado.toLocaleString("pt-BR")} km` : "-",
+      item.responsavel,
+      item.custo > 0 ? formatarMoeda(item.custo) : "Isento"
+    ]);
+
+    autoTable(doc, {
+      startY: startYHistorico + 4,
+      head: [["Data", "Tipo", "Título / Descrição", "KM", "Responsável", "Custo"]],
+      body: tableRows,
+      theme: "striped",
+      headStyles: {
+        fillColor: [30, 41, 59],
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+        fontSize: 8
+      },
+      bodyStyles: {
+        fontSize: 8,
+        cellPadding: 3
+      },
+      columnStyles: {
+        0: { cellWidth: 26 },
+        1: { cellWidth: 22 },
+        2: { cellWidth: 65 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 28 },
+        5: { cellWidth: 22, halign: "right" }
+      }
+    });
+
+    // Rodapé
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.text(
+        `Página ${i} de ${totalPages} - Relatório de uso interno confidencial`,
+        105,
+        290,
+        { align: "center" }
+      );
+    }
+
+    doc.save(`Prontuario_Viatura_${viatura.prefixo}.pdf`);
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen w-screen bg-slate-950 items-center justify-center text-slate-400">
@@ -195,13 +319,23 @@ export default function ProntuarioViaturaPage({ params }) {
             </div>
           </div>
 
-          <button 
-            onClick={() => setModalAberto(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer shadow-lg shadow-blue-600/20"
-          >
-            <Plus size={16} />
-            Lançar Novo Evento
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={handleGerarPDF}
+              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs px-3.5 py-2.5 rounded-xl transition-all cursor-pointer"
+            >
+              <FileText size={16} className="text-blue-400" />
+              Baixar PDF
+            </button>
+
+            <button 
+              onClick={() => setModalAberto(true)}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer shadow-lg shadow-blue-600/20"
+            >
+              <Plus size={16} />
+              Lançar Novo Evento
+            </button>
+          </div>
         </div>
 
         {/* Ficha Técnica e Resumo de Custos */}
@@ -433,7 +567,7 @@ export default function ProntuarioViaturaPage({ params }) {
           </div>
         )}
 
-        {/* 2. NOVO: Modal de Visualização de Detalhes do Evento */}
+        {/* 2. Modal de Visualização de Detalhes do Evento */}
         {eventoSelecionado && (
           <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
