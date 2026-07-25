@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
@@ -10,7 +11,6 @@ import {
   BarChart3,
   PlusCircle, 
   Wrench, 
-  ShieldCheck, 
   LogOut,
   ChevronRight
 } from "lucide-react";
@@ -83,11 +83,17 @@ export default function Sidebar() {
       <div>
         {/* Cabeçalho / Logo do Sistema */}
         <div className="flex items-center gap-3 px-2 py-3 mb-5 relative">
-          <div className="p-2.5 bg-blue-600/10 border border-blue-500/20 rounded-xl text-blue-500 shadow-sm shadow-blue-500/10">
-            <ShieldCheck size={22} />
+          <div className="p-1.5 bg-blue-600/10 border border-blue-500/20 rounded-xl shadow-sm shadow-blue-500/10 flex items-center justify-center shrink-0">
+            <Image
+              src="/assets/image/logo-17bpm.png"
+              alt="Logo 17º BPM"
+              width={28}
+              height={28}
+              className="object-contain"
+            />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-white tracking-tight">FrotaPol</h1>
+            <h1 className="text-sm font-bold text-white tracking-tight">17º BPM</h1>
             <p className="text-[10px] text-slate-400 font-mono">Gestão Operacional</p>
           </div>
 

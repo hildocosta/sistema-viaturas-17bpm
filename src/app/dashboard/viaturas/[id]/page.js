@@ -179,8 +179,8 @@ export default function ProntuarioViaturaPage({ params }) {
           </div>
         </div>
 
-        {/* Área de Rolar Interna */}
-        <ContentScrollArea>
+        {/* Área de Rolar Interna com classe container-sombrio */}
+        <ContentScrollArea className="container-sombrio">
           <CardsGrid>
             {/* Card 1: Identificação Operacional */}
             <DashboardCard>
