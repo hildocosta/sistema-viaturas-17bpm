@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "FrotaPol - Gestão Operacional de Frota",
+  title: "17º BPM - Gestão Operacional de Frota",
   description: "Sistema de controle e disponibilidade da frota policial do 17º BPM",
 };
 
