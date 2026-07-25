@@ -6,17 +6,19 @@ import { useRouter, useParams } from "next/navigation";
 import { Car, ChevronRight, ChevronLeft, Save, Edit3, ArrowLeft } from "lucide-react";
 
 import Sidebar from "@/components/sidebar/page";
-import FormStepper from "@/components/FormStepper"; 
+import FormStepper from "@/components/viaturas/FormStepper"; 
 import EditViaturaModal from "@/components/viaturas/EditViaturaModal";
 import { DashboardWrapper, SidebarArea, MainContent, ContentScrollArea } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { PrimaryButton, SecondaryButton } from "@/components/ui/Button";
 import { SuccessAlert } from "@/components/ui/SuccessAlert";
 
-// Import das etapas isoladas
-import { IdentificacaoStep } from "@/components/viaturas/steps/IdentificacaoStep";
-import { EspecificacoesStep } from "@/components/viaturas/steps/EspecificacoesStep";
-import { StatusObservacoesStep } from "@/components/viaturas/steps/StatusObservacoesStep";
+// Imports exatos baseados no seu arquivo ViaturaFormSteps.js
+import { 
+  StepIdentificacao, 
+  StepEspecificacoes, 
+  StepCondicoes 
+} from "@/components/viaturas/ViaturaFormSteps";
 
 const STEPS = [
   { id: 1, title: "Identificação", desc: "Dados operacionais" },
@@ -77,7 +79,7 @@ export default function EditarViaturaPage() {
     setTimeout(() => {
       setLoading(false);
       setSucesso(true);
-      
+
       setTimeout(() => {
         router.push(`/dashboard/viaturas/${viaturaId}`);
       }, 1500);
@@ -124,13 +126,13 @@ export default function EditarViaturaPage() {
             <form onSubmit={currentStep === 3 ? handleSubmit : handleNext}>
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6 min-h-70">
                 {currentStep === 1 && (
-                  <IdentificacaoStep formData={formData} onChange={handleChange} />
+                  <StepIdentificacao formData={formData} handleChange={handleChange} />
                 )}
                 {currentStep === 2 && (
-                  <EspecificacoesStep formData={formData} onChange={handleChange} />
+                  <StepEspecificacoes formData={formData} handleChange={handleChange} />
                 )}
                 {currentStep === 3 && (
-                  <StatusObservacoesStep formData={formData} onChange={handleChange} />
+                  <StepCondicoes formData={formData} handleChange={handleChange} />
                 )}
               </div>
 
