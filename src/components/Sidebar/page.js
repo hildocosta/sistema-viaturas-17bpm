@@ -15,8 +15,6 @@ import {
   ChevronRight
 } from "lucide-react";
 
-import ThemeToggle from "@/components/ThemeToggle";
-
 export default function Sidebar() {
   const pathname = usePathname();
 
@@ -81,7 +79,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between container-sombrio select-none transition-colors">
+    <aside className="w-full h-full bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between container-sombrio select-none">
       <div>
         {/* Cabeçalho / Logo do Sistema */}
         <div className="flex items-center gap-3 px-2 py-3 mb-5 relative">
@@ -95,8 +93,8 @@ export default function Sidebar() {
             />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">17º BPM</h1>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Gestão Operacional</p>
+            <h1 className="text-sm font-bold text-white tracking-tight">17º BPM</h1>
+            <p className="text-[10px] text-slate-400 font-mono">Gestão Operacional</p>
           </div>
 
           {/* Divisor com Efeito Gradiente Neon */}
@@ -107,7 +105,7 @@ export default function Sidebar() {
         <div className="space-y-5">
           {menuItems.map((grupo, gIdx) => (
             <div key={gIdx}>
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
+              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">
                 {grupo.titulo}
               </p>
               
@@ -122,11 +120,11 @@ export default function Sidebar() {
                         className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                           ativo
                             ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-950/60"
+                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-950/60"
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <Icone size={17} className={ativo ? "text-white" : "text-slate-500 dark:text-slate-400"} />
+                          <Icone size={17} className={ativo ? "text-white" : "text-slate-400"} />
                           <span>{item.nome}</span>
                         </div>
 
@@ -141,28 +139,21 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Rodapé da Sidebar - Alternador de Tema, Usuário & Sair */}
-      <div className="relative pt-4 space-y-3">
+      {/* Rodapé da Sidebar - Usuário & Sair */}
+      <div className="relative pt-4">
         {/* Divisor Superior do Rodapé com Efeito Gradiente */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-300 dark:via-slate-700/60 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
 
-        {/* Botão de Alternância de Tema Dark / Light */}
-        <div className="flex items-center justify-between px-2">
-          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Tema do Sistema</span>
-          <ThemeToggle />
-        </div>
-
-        {/* Card do Usuário */}
-        <div className="flex items-center justify-between px-3 py-2 bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl">
+        <div className="flex items-center justify-between px-3 py-2 bg-slate-950/60 border border-slate-800/80 rounded-xl">
           <div className="min-w-0">
-            <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">1º Sgt. Silva</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-500 truncate">Gestor de Frota</p>
+            <p className="text-xs font-bold text-slate-200 truncate">1º Sgt. Silva</p>
+            <p className="text-[10px] text-slate-500 truncate">Gestor de Frota</p>
           </div>
 
           <Link href="/">
             <button 
               title="Sair do Sistema"
-              className="p-1.5 hover:bg-rose-500/10 text-slate-400 hover:text-rose-500 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 rounded-lg transition-colors cursor-pointer"
             >
               <LogOut size={16} />
             </button>
