@@ -308,6 +308,8 @@ export default function NovaViaturaPage() {
                       <label className={labelClass}>Emprego Exclusivo</label>
                       <select name="empregoExclusivo" value={formData.empregoExclusivo} onChange={handleChange} className={inputClass}>
                         <option value="Não" className="bg-slate-900">Não</option>
+                         <option value="Patrulha Rural" className="bg-slate-900">Patrulha Rural</option>
+                          <option value="Patrulha Maria da Penha" className="bg-slate-900">Patrulha Maria da Penha</option>
                         <option value="Sim" className="bg-slate-900">Sim</option>
                       </select>
                     </div>
