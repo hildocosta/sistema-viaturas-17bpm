@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Viatura {
+  id                    Int       @id @default(autoincrement())
+  
+  // Identificação e Documentação
+  pastaDigital          String?   @map("pasta_digital") @db.Text
+  idViaturaPlanilha     String?   @map("id_viatura_planilha") @db.VarChar(255) // Ampliado para suportar identificadores longos
+  prefixo               String    @unique @db.VarChar(100)
+  placa                 String?   @db.VarChar(20)
+  patrimonio            String?   @db.VarChar(255)
+  
+  // Lotação e Aplicação
+  subunidade            String?   @db.VarChar(255) // Ampliado para suportar nomes extensos de companhias/pelotões
+  municipio             String?   @db.VarChar(255)
+  atividadePredominante String?   @map("atividade_predominante") @db.VarChar(255)
+  empregoExclusivo      String?   @map("emprego_exclusivo") @db.VarChar(100)
+  frotaCriterioGpm      String?   @map("frota_criterio_gpm") @db.VarChar(255)
+  
+  // Situação e Propriedade
+  status                String?   @db.VarChar(100)
+  propriedade           String?   @db.VarChar(255) // Ampliado para suportar órgãos públicos como FESP/PR
+  cnpj                  String?   @db.VarChar(30)
+  
+  // Especificações Técnicas
+  marca                 String?   @db.VarChar(100)
+  modelo                String?   @db.VarChar(255)
+  blindagem             String?   @db.VarChar(100)
+  especie               String?   @db.VarChar(100)
+  tipoFrota             String?   @map("tipo_frota") @db.VarChar(100)
+  renavam               String?   @db.VarChar(100)
+  chassi                String?   @db.VarChar(100)
+  anoFabricacao         Int?      @map("ano_fabricacao")
+  anoModelo             Int?      @map("ano_modelo")
+  cor                   String?   @db.VarChar(100)
+  combustivel           String?   @db.VarChar(100)
+  
+  // Comunicação e Rastreamento (Rádio / AVL)
+  plaquetaRadio         String?   @map("plaqueta_radio") @db.VarChar(255)
+  serialRadio           String?   @map("serial_radio") @db.VarChar(255)
+  avl                   String?   @map("avl") @db.VarChar(255)
+  
+  // Indicadores Financeiros
+  fipe                  Decimal?  @db.Decimal(12, 2)
+  dataFipe              DateTime? @map("data_fipe")
+  debitos               Decimal?  @default(0) @db.Decimal(12, 2)
+  dataDebitos           DateTime? @map("data_debitos")
+  
+  // Conservação e Odômetro
+  km                    Int?
+  dataKm                DateTime? @map("data_km")
+  estadoConservacao     String?   @map("estado_conservacao") @db.VarChar(100)
+  dataConservacao       DateTime? @map("data_conservacao")
+  
+  // Observações e Metadados do Sistema
+  observacao            String?   @db.Text
+  exclusao              String?   @db.VarChar(10)
+  criadoEm              DateTime  @default(now()) @map("criado_em")
+  atualizadoEm          DateTime  @updatedAt @map("atualizado_em")
+
+  @@map("viaturas")
+}
