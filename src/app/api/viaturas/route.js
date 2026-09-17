@@ -71,8 +71,8 @@ export async function POST(request) {
         debitos: body.debitos !== "" && body.debitos !== null && body.debitos !== undefined ? Number(body.debitos) : 0,
         dataDebitos: body.dataDebitos ? new Date(body.dataDebitos) : null,
 
-        // Conservação e Odômetro
-        km: body.km !== "" && body.km !== null && body.km !== undefined ? Number(body.km) : null,
+        // Conservação e Odômetro (LIMPANDO CARACTERES NÃO-NUMÉRICOS)
+        km: body.km !== "" && body.km !== null && body.km !== undefined ? parseInt(String(body.km).replace(/\D/g, ''), 10) : null,
         dataKm: body.dataKm ? new Date(body.dataKm) : null,
         estadoConservacao: body.estadoConservacao || null,
         dataConservacao: body.dataConservacao ? new Date(body.dataConservacao) : null,

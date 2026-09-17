@@ -57,7 +57,7 @@ export default function NovaViaturaPage() {
     // Step 3: Características, Propriedade e Rádio
     propriedade: "Própria",
     especie: "Automóvel",
-    tipoFrota: "Operacional",
+    tipoFrota: "Própria",
     combustivel: "Flex",
     blindagem: "Não",
     empregoExclusivo: "Não",
@@ -308,8 +308,8 @@ export default function NovaViaturaPage() {
                       <label className={labelClass}>Emprego Exclusivo</label>
                       <select name="empregoExclusivo" value={formData.empregoExclusivo} onChange={handleChange} className={inputClass}>
                         <option value="Não" className="bg-slate-900">Não</option>
-                         <option value="Patrulha Rural" className="bg-slate-900">Patrulha Rural</option>
-                          <option value="Patrulha Maria da Penha" className="bg-slate-900">Patrulha Maria da Penha</option>
+                        <option value="Patrulha Rural" className="bg-slate-900">Patrulha Rural</option>
+                        <option value="Patrulha Maria da Penha" className="bg-slate-900">Patrulha Maria da Penha</option>
                         <option value="Sim" className="bg-slate-900">Sim</option>
                       </select>
                     </div>
@@ -340,7 +340,14 @@ export default function NovaViaturaPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                     <div>
                       <label className={labelClass}>Quilometragem (KM)</label>
-                      <input type="number" name="km" value={formData.km} onChange={handleChange} placeholder="Ex: 45000" className={inputClass} />
+                      <input 
+                        type="text" 
+                        name="km" 
+                        value={formData.km} 
+                        onChange={handleChange} 
+                        placeholder="Ex: 61.026 ou 61026" 
+                        className={inputClass} 
+                      />
                     </div>
                     <div>
                       <label className={labelClass}>Data Leitura KM</label>
