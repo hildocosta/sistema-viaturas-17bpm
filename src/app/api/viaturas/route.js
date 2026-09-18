@@ -1,6 +1,22 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma.js'
 
+// Função auxiliar para converter string formatada em Real (ex: "182.535,00") para Number válido (182535.00)
+function parseMoedaToNumber(valor) {
+  if (valor === null || valor === undefined || valor === '') return null;
+  if (typeof valor === 'number') return valor;
+
+  // Remove espaços, "R$", pontos de milhar e troca vírgula por ponto decimal
+  const limpo = String(valor)
+    .replace(/R\$\s?/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.')
+    .trim();
+
+  const numero = parseFloat(limpo);
+  return isNaN(numero) ? null : numero;
+}
+
 export async function POST(request) {
   try {
     const body = await request.json()
@@ -65,13 +81,13 @@ export async function POST(request) {
         serialRadio: body.serialRadio || null,
         avl: body.avl || null,
 
-        // Indicadores Financeiros (Decimal no Prisma)
-        fipe: body.fipe !== "" && body.fipe !== null && body.fipe !== undefined ? Number(body.fipe) : null,
+        // Indicadores Financeiros (TRATADOS CORRETAMENTE)
+        fipe: parseMoedaToNumber(body.fipe),
         dataFipe: body.dataFipe ? new Date(body.dataFipe) : null,
-        debitos: body.debitos !== "" && body.debitos !== null && body.debitos !== undefined ? Number(body.debitos) : 0,
+        debitos: parseMoedaToNumber(body.debitos) ?? 0,
         dataDebitos: body.dataDebitos ? new Date(body.dataDebitos) : null,
 
-        // Conservação e Odômetro (LIMPANDO CARACTERES NÃO-NUMÉRICOS)
+        // Conservação e Odômetro
         km: body.km !== "" && body.km !== null && body.km !== undefined ? parseInt(String(body.km).replace(/\D/g, ''), 10) : null,
         dataKm: body.dataKm ? new Date(body.dataKm) : null,
         estadoConservacao: body.estadoConservacao || null,
