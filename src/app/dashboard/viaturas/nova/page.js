@@ -200,8 +200,8 @@ export default function NovaViaturaPage() {
                     <div>
                       <label className={labelClass}>Status Atual</label>
                       <select name="status" value={formData.status} onChange={handleChange} className={inputClass}>
-                        <option value="Ativa" className="bg-slate-900">Ativa</option>
                         <option value="Disponível" className="bg-slate-900">Disponível</option>
+                        <option value="Indisponível" className="bg-slate-900">Indisponível - Aguardando Regularização</option>
                         <option value="Manutenção" className="bg-slate-900">Manutenção</option>
                         <option value="Inoperante" className="bg-slate-900">Inoperante</option>
                         <option value="Recolhida" className="bg-slate-900">Recolhida</option>
@@ -301,6 +301,7 @@ export default function NovaViaturaPage() {
                       <label className={labelClass}>Blindagem</label>
                       <select name="blindagem" value={formData.blindagem} onChange={handleChange} className={inputClass}>
                         <option value="Não" className="bg-slate-900">Não</option>
+                         <option value="Parcial" className="bg-slate-900">Parcial</option>
                         <option value="Sim" className="bg-slate-900">Sim</option>
                       </select>
                     </div>
