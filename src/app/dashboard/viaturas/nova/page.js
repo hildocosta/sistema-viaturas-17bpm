@@ -87,12 +87,26 @@ export default function NovaViaturaPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = (e) => {
-    e.preventDefault();
-    if (currentStep < STEPS.length) setCurrentStep((prev) => prev + 1);
+  // Validação manual por etapa antes de prosseguir
+  const handleNextStep = () => {
+    setErroMsg("");
+
+    // Validações específicas do Passo 1
+    if (currentStep === 1) {
+      if (!formData.prefixo.trim()) {
+        setErroMsg("O campo Prefixo é obrigatório para continuar.");
+        return;
+      }
+    }
+
+    // Avançar passo
+    if (currentStep < STEPS.length) {
+      setCurrentStep((prev) => prev + 1);
+    }
   };
 
   const handleBack = () => {
+    setErroMsg("");
     if (currentStep > 1) setCurrentStep((prev) => prev - 1);
   };
 
@@ -173,7 +187,7 @@ export default function NovaViaturaPage() {
               </div>
             )}
 
-            <form id="viatura-form" onSubmit={currentStep === STEPS.length ? handleSubmit : handleNext}>
+            <form id="viatura-form" onSubmit={handleSubmit}>
               <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-6 shadow-xl backdrop-blur-md">
                 
                 {/* STEP 1: Lotação, Placa e Identificação */}
@@ -187,7 +201,7 @@ export default function NovaViaturaPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
                       <div>
                         <label className={labelClass}>Prefixo <span className="text-red-400">*</span></label>
-                        <input type="text" name="prefixo" value={formData.prefixo} onChange={handleChange} required placeholder="Ex: L1701" className={inputClass} />
+                        <input type="text" name="prefixo" value={formData.prefixo} onChange={handleChange} placeholder="Ex: L1701" className={inputClass} />
                       </div>
                       <div>
                         <label className={labelClass}>Placa</label>
@@ -430,7 +444,7 @@ export default function NovaViaturaPage() {
             </form>
           </div>
 
-          {/* Botoes de Navegação */}
+          {/* Botões de Navegação */}
           <div className="flex items-center justify-between pt-4 pb-2 border-t border-slate-800/60 mt-auto">
             <SecondaryButton
               type="button"
@@ -444,8 +458,8 @@ export default function NovaViaturaPage() {
             <div className="flex items-center gap-3">
               {currentStep < STEPS.length ? (
                 <PrimaryButton 
-                  type="submit" 
-                  form="viatura-form"
+                  type="button" 
+                  onClick={handleNextStep}
                   icon={ChevronRight} 
                   iconPosition="right"
                 >

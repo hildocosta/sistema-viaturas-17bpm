@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import Sidebar from "@/components/sidebar/page";
+import { useState, useEffect } from "react";
+import Sidebar from "@/components/sidebar";
 import { 
   Building2, 
   Car, 
@@ -14,7 +14,8 @@ import {
   BarChart3,
   PieChart,
   TrendingUp,
-  AlertTriangle
+  AlertTriangle,
+  ChevronRight
 } from "lucide-react";
 
 import { 
@@ -25,181 +26,198 @@ import {
 } from "@/components/layout/DashboardLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+// Dados mockados das unidades com inventário completo
+const INITIAL_COMPANHIAS_DATA = [
+  {
+    id: "sede",
+    grupo: "SEDE",
+    nome: "Sede - 17º BPM",
+    sigla: "SEDE",
+    cidade: "São José dos Pinhais - PR",
+    comandante: "Ten. Col. Souza",
+    viaturas: [
+      { prefixo: "L0001", placa: "KLM3P45", modelo: "Toyota SW4", tipo: "Administrativo", status: "Operacional", km: "18.900" },
+      { prefixo: "L0002", placa: "NOP4Q56", modelo: "Nissan Kicks", tipo: "P2", status: "Operacional", km: "50.100" },
+    ]
+  },
+  {
+    id: "rotam",
+    grupo: "SEDE",
+    nome: "ROTAM - Tático Móvel",
+    sigla: "ROTAM",
+    cidade: "Sede / Área do Batalhão",
+    comandante: "Cap. Rocha",
+    viaturas: [
+      { prefixo: "R0101", placa: "DEF2E34", modelo: "Chevrolet S10", tipo: "ROTAM", status: "Operacional", km: "42.100" },
+      { prefixo: "R0102", placa: "YZA9L01", modelo: "Toyota Hilux", tipo: "ROTAM", status: "Operacional", km: "15.400" },
+      { prefixo: "R0103", placa: "PQR6I78", modelo: "Chevrolet S10", tipo: "ROTAM", status: "Manutenção", km: "68.000" },
+    ]
+  },
+  {
+    id: "pptran",
+    grupo: "SEDE",
+    nome: "PPTran - Pelotão de Trânsito",
+    sigla: "PPTRAN",
+    cidade: "Sede / Área do Batalhão",
+    comandante: "Ten. Faria",
+    viaturas: [
+      { prefixo: "T0301", placa: "GHI3F45", modelo: "Toyota Corolla", tipo: "Trânsito", status: "Operacional", km: "38.400" },
+      { prefixo: "T0302", placa: "EFG1N23", modelo: "Fiat Cronos", tipo: "Trânsito", status: "Operacional", km: "22.200" },
+    ]
+  },
+  {
+    id: "rural",
+    grupo: "SEDE",
+    nome: "Patrulha Rural",
+    sigla: "RURAL",
+    cidade: "Zona Rural do Batalhão",
+    comandante: "Ten. Martins",
+    viaturas: [
+      { prefixo: "PR01", placa: "JKL4G56", modelo: "Chevrolet S10 4x4", tipo: "Rural", status: "Operacional", km: "81.000" },
+    ]
+  },
+  {
+    id: "1cia",
+    grupo: "1CIA",
+    nome: "1ª Companhia - Araucária",
+    sigla: "1ª CIA",
+    cidade: "Araucária - PR",
+    comandante: "Cap. Ribeiro",
+    viaturas: [
+      { prefixo: "L0123", placa: "ABC1D23", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "45.200" },
+      { prefixo: "L0126", placa: "MNO5H67", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "31.000" },
+    ]
+  },
+  {
+    id: "1cia-tijucas",
+    grupo: "1CIA",
+    nome: "1ª Cia - Tijucas do Sul",
+    sigla: "1ª CIA / TIJUCAS",
+    cidade: "Tijucas do Sul - PR",
+    comandante: "Ten. Alves",
+    viaturas: [
+      { prefixo: "L0140", placa: "TIJ1A23", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "52.800" },
+    ]
+  },
+  {
+    id: "1cia-cartorio",
+    grupo: "1CIA",
+    nome: "1ª Cia - Cartório / Adm",
+    sigla: "1ª CIA / CARTÓRIO",
+    cidade: "Araucária - PR",
+    comandante: "Sgt. Castro",
+    viaturas: [
+      { prefixo: "L0100", placa: "CAR9B88", modelo: "Fiat Grand Siena", tipo: "Cartório", status: "Operacional", km: "94.100" },
+    ]
+  },
+  {
+    id: "2cia",
+    grupo: "2CIA",
+    nome: "2ª Companhia - Campo Largo",
+    sigla: "2ª CIA",
+    cidade: "Campo Largo - PR",
+    comandante: "Cap. Mendes",
+    viaturas: [
+      { prefixo: "L0201", placa: "STU7J89", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "28.300" },
+      { prefixo: "L0202", placa: "VWX8K90", modelo: "Renault Duster", tipo: "RPA", status: "Manutenção", km: "76.100" },
+    ]
+  },
+  {
+    id: "3cia",
+    grupo: "3CIA",
+    nome: "3ª Companhia - S.J. Pinhais",
+    sigla: "3ª CIA",
+    cidade: "São José dos Pinhais - PR",
+    comandante: "Maj. Oliveira",
+    viaturas: [
+      { prefixo: "L0301", placa: "BCD0M12", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "41.800" },
+    ]
+  },
+  {
+    id: "3cia-balsanova",
+    grupo: "3CIA",
+    nome: "3ª Cia - Balsa Nova",
+    sigla: "3ª CIA / BALSA NOVA",
+    cidade: "Balsa Nova - PR",
+    comandante: "Ten. Duarte",
+    viaturas: [
+      { prefixo: "L0350", placa: "BAL2C34", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "63.000" },
+    ]
+  },
+  {
+    id: "3cia-ferraria",
+    grupo: "3CIA",
+    nome: "3ª Cia - Destacamento Ferraria",
+    sigla: "3ª CIA / FERRARIA",
+    cidade: "Campo Largo (Ferraria) - PR",
+    comandante: "Sgt. Lima",
+    viaturas: [
+      { prefixo: "L0360", placa: "FER5D67", modelo: "Renault Duster 4x4", tipo: "RPA", status: "Baixada", km: "118.000" },
+    ]
+  },
+  {
+    id: "4cia",
+    grupo: "4CIA",
+    nome: "4ª Companhia",
+    sigla: "4ª CIA",
+    cidade: "Fazenda Rio Grande - PR",
+    comandante: "Cap. Barbosa",
+    viaturas: [
+      { prefixo: "L0401", placa: "HIJ2O34", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "35.200" },
+    ]
+  },
+  {
+    id: "4cia-mandirituba",
+    grupo: "4CIA",
+    nome: "4ª Cia - Mandirituba",
+    sigla: "4ª CIA / MANDIRITUBA",
+    cidade: "Mandirituba - PR",
+    comandante: "Ten. Guimarães",
+    viaturas: [
+      { prefixo: "L0420", placa: "MAN8E90", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "49.000" },
+    ]
+  },
+  {
+    id: "4cia-agudos",
+    grupo: "4CIA",
+    nome: "4ª Cia - Agudos do Sul",
+    sigla: "4ª CIA / AGUDOS DO SUL",
+    cidade: "Agudos do Sul - PR",
+    comandante: "Sgt. Nunes",
+    viaturas: [
+      { prefixo: "L0430", placa: "AGU3F12", modelo: "Chevrolet S10", tipo: "RPA", status: "Operacional", km: "71.500" },
+    ]
+  }
+];
+
 export default function DashboardCompanhiasPage() {
   const [companhiaSelecionada, setCompanhiaSelecionada] = useState(null);
   const [filtroTextoModal, setFiltroTextoModal] = useState("");
   const [filtroGrupo, setFiltroGrupo] = useState("TODAS");
 
-  // Dados das unidades com inventário completo
-  const companhiasData = [
-    {
-      id: "sede",
-      grupo: "SEDE",
-      nome: "Sede - 17º BPM",
-      sigla: "SEDE",
-      cidade: "São José dos Pinhais - PR",
-      comandante: "Ten. Col. Souza",
-      viaturas: [
-        { prefixo: "L0001", placa: "KLM3P45", modelo: "Toyota SW4", tipo: "Administrativo", status: "Operacional", km: "18.900" },
-        { prefixo: "L0002", placa: "NOP4Q56", modelo: "Nissan Kicks", tipo: "P2", status: "Operacional", km: "50.100" },
-      ]
-    },
-    {
-      id: "rotam",
-      grupo: "SEDE",
-      nome: "ROTAM - Tático Móvel",
-      sigla: "ROTAM",
-      cidade: "Sede / Área do Batalhão",
-      comandante: "Cap. Rocha",
-      viaturas: [
-        { prefixo: "R0101", placa: "DEF2E34", modelo: "Chevrolet S10", tipo: "ROTAM", status: "Operacional", km: "42.100" },
-        { prefixo: "R0102", placa: "YZA9L01", modelo: "Toyota Hilux", tipo: "ROTAM", status: "Operacional", km: "15.400" },
-        { prefixo: "R0103", placa: "PQR6I78", modelo: "Chevrolet S10", tipo: "ROTAM", status: "Manutenção", km: "68.000" },
-      ]
-    },
-    {
-      id: "pptran",
-      grupo: "SEDE",
-      nome: "PPTran - Pelotão de Trânsito",
-      sigla: "PPTRAN",
-      cidade: "Sede / Área do Batalhão",
-      comandante: "Ten. Faria",
-      viaturas: [
-        { prefixo: "T0301", placa: "GHI3F45", modelo: "Toyota Corolla", tipo: "Trânsito", status: "Operacional", km: "38.400" },
-        { prefixo: "T0302", placa: "EFG1N23", modelo: "Fiat Cronos", tipo: "Trânsito", status: "Operacional", km: "22.200" },
-      ]
-    },
-    {
-      id: "rural",
-      grupo: "SEDE",
-      nome: "Patrulha Rural",
-      sigla: "RURAL",
-      cidade: "Zona Rural do Batalhão",
-      comandante: "Ten. Martins",
-      viaturas: [
-        { prefixo: "PR01", placa: "JKL4G56", modelo: "Chevrolet S10 4x4", tipo: "Rural", status: "Operacional", km: "81.000" },
-      ]
-    },
-    {
-      id: "1cia",
-      grupo: "1CIA",
-      nome: "1ª Companhia - Araucária",
-      sigla: "1ª CIA",
-      cidade: "Araucária - PR",
-      comandante: "Cap. Ribeiro",
-      viaturas: [
-        { prefixo: "L0123", placa: "ABC1D23", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "45.200" },
-        { prefixo: "L0126", placa: "MNO5H67", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "31.000" },
-      ]
-    },
-    {
-      id: "1cia-tijucas",
-      grupo: "1CIA",
-      nome: "1ª Cia - Tijucas do Sul",
-      sigla: "1ª CIA / TIJUCAS",
-      cidade: "Tijucas do Sul - PR",
-      comandante: "Ten. Alves",
-      viaturas: [
-        { prefixo: "L0140", placa: "TIJ1A23", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "52.800" },
-      ]
-    },
-    {
-      id: "1cia-cartorio",
-      grupo: "1CIA",
-      nome: "1ª Cia - Cartório / Adm",
-      sigla: "1ª CIA / CARTÓRIO",
-      cidade: "Araucária - PR",
-      comandante: "Sgt. Castro",
-      viaturas: [
-        { prefixo: "L0100", placa: "CAR9B88", modelo: "Fiat Grand Siena", tipo: "Cartório", status: "Operacional", km: "94.100" },
-      ]
-    },
-    {
-      id: "2cia",
-      grupo: "2CIA",
-      nome: "2ª Companhia - Campo Largo",
-      sigla: "2ª CIA",
-      cidade: "Campo Largo - PR",
-      comandante: "Cap. Mendes",
-      viaturas: [
-        { prefixo: "L0201", placa: "STU7J89", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "28.300" },
-        { prefixo: "L0202", placa: "VWX8K90", modelo: "Renault Duster", tipo: "RPA", status: "Manutenção", km: "76.100" },
-      ]
-    },
-    {
-      id: "3cia",
-      grupo: "3CIA",
-      nome: "3ª Companhia - S.J. Pinhais",
-      sigla: "3ª CIA",
-      cidade: "São José dos Pinhais - PR",
-      comandante: "Maj. Oliveira",
-      viaturas: [
-        { prefixo: "L0301", placa: "BCD0M12", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "41.800" },
-      ]
-    },
-    {
-      id: "3cia-balsanova",
-      grupo: "3CIA",
-      nome: "3ª Cia - Balsa Nova",
-      sigla: "3ª CIA / BALSA NOVA",
-      cidade: "Balsa Nova - PR",
-      comandante: "Ten. Duarte",
-      viaturas: [
-        { prefixo: "L0350", placa: "BAL2C34", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "63.000" },
-      ]
-    },
-    {
-      id: "3cia-ferraria",
-      grupo: "3CIA",
-      nome: "3ª Cia - Destacamento Ferraria",
-      sigla: "3ª CIA / FERRARIA",
-      cidade: "Campo Largo (Ferraria) - PR",
-      comandante: "Sgt. Lima",
-      viaturas: [
-        { prefixo: "L0360", placa: "FER5D67", modelo: "Renault Duster 4x4", tipo: "RPA", status: "Baixada", km: "118.000" },
-      ]
-    },
-    {
-      id: "4cia",
-      grupo: "4CIA",
-      nome: "4ª Companhia",
-      sigla: "4ª CIA",
-      cidade: "Fazenda Rio Grande - PR",
-      comandante: "Cap. Barbosa",
-      viaturas: [
-        { prefixo: "L0401", placa: "HIJ2O34", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "35.200" },
-      ]
-    },
-    {
-      id: "4cia-mandirituba",
-      grupo: "4CIA",
-      nome: "4ª Cia - Mandirituba",
-      sigla: "4ª CIA / MANDIRITUBA",
-      cidade: "Mandirituba - PR",
-      comandante: "Ten. Guimarães",
-      viaturas: [
-        { prefixo: "L0420", placa: "MAN8E90", modelo: "Renault Duster", tipo: "RPA", status: "Operacional", km: "49.000" },
-      ]
-    },
-    {
-      id: "4cia-agudos",
-      grupo: "4CIA",
-      nome: "4ª Cia - Agudos do Sul",
-      sigla: "4ª CIA / AGUDOS DO SUL",
-      cidade: "Agudos do Sul - PR",
-      comandante: "Sgt. Nunes",
-      viaturas: [
-        { prefixo: "L0430", placa: "AGU3F12", modelo: "Chevrolet S10", tipo: "RPA", status: "Operacional", km: "71.500" },
-      ]
-    }
-  ];
+  // Fechar modal ao pressionar ESC
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setCompanhiaSelecionada(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Filtro por grupo selecionado
-  const companhiasFiltradas = companhiasData.filter(
+  const companhiasFiltradas = INITIAL_COMPANHIAS_DATA.filter(
     (cia) => filtroGrupo === "TODAS" || cia.grupo === filtroGrupo
   );
 
-  // Cálculos consolidados para o Dashboard
+  // Fecha o modal caso o grupo alterado não contenha a cia selecionada
+  const handleGrupoChange = (grupo) => {
+    setFiltroGrupo(grupo);
+    if (companhiaSelecionada && grupo !== "TODAS" && companhiaSelecionada.grupo !== grupo) {
+      setCompanhiaSelecionada(null);
+    }
+  };
+
+  // Cálculos consolidados
   const todasViaturas = companhiasFiltradas.flatMap((c) => c.viaturas);
   const totalViaturas = todasViaturas.length;
   const operacionais = todasViaturas.filter((v) => v.status === "Operacional").length;
@@ -213,15 +231,33 @@ export default function DashboardCompanhiasPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case "Operacional":
-        return <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center gap-1"><CheckCircle2 size={12}/> Operacional</span>;
+        return (
+          <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center gap-1 shrink-0">
+            <CheckCircle2 size={12}/> Operacional
+          </span>
+        );
       case "Manutenção":
-        return <span className="px-2 py-0.5 text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full flex items-center gap-1"><Wrench size={12}/> Manutenção</span>;
+        return (
+          <span className="px-2 py-0.5 text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full flex items-center gap-1 shrink-0">
+            <Wrench size={12}/> Manutenção
+          </span>
+        );
       case "Baixada":
-        return <span className="px-2 py-0.5 text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full flex items-center gap-1"><XCircle size={12}/> Baixada</span>;
+        return (
+          <span className="px-2 py-0.5 text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full flex items-center gap-1 shrink-0">
+            <XCircle size={12}/> Baixada
+          </span>
+        );
       default:
         return null;
     }
   };
+
+  const viaturasModalFiltradas = companhiaSelecionada?.viaturas.filter((v) =>
+    v.prefixo.toLowerCase().includes(filtroTextoModal.toLowerCase()) ||
+    v.placa.toLowerCase().includes(filtroTextoModal.toLowerCase()) ||
+    v.modelo.toLowerCase().includes(filtroTextoModal.toLowerCase())
+  ) || [];
 
   return (
     <DashboardWrapper>
@@ -239,12 +275,12 @@ export default function DashboardCompanhiasPage() {
             title="Dashboard de Frota por Companhia"
             description="Indicadores consolidados e disponibilidade operacional das unidades do 17º BPM"
             action={
-              <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
+              <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80 overflow-x-auto max-w-full">
                 {["TODAS", "SEDE", "1CIA", "2CIA", "3CIA", "4CIA"].map((g) => (
                   <button
                     key={g}
-                    onClick={() => setFiltroGrupo(g)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    onClick={() => handleGrupoChange(g)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                       filtroGrupo === g
                         ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
                         : "text-slate-400 hover:text-slate-200"
@@ -374,7 +410,10 @@ export default function DashboardCompanhiasPage() {
                   return (
                     <div 
                       key={c.id} 
-                      onClick={() => setCompanhiaSelecionada(c)}
+                      onClick={() => {
+                        setCompanhiaSelecionada(c);
+                        setFiltroTextoModal("");
+                      }}
                       className="group cursor-pointer p-2 rounded-lg hover:bg-slate-950/60 border border-transparent hover:border-slate-800 transition-all"
                     >
                       <div className="flex items-center justify-between text-xs mb-1">
@@ -431,7 +470,10 @@ export default function DashboardCompanhiasPage() {
                     return (
                       <tr 
                         key={cia.id}
-                        onClick={() => setCompanhiaSelecionada(cia)}
+                        onClick={() => {
+                          setCompanhiaSelecionada(cia);
+                          setFiltroTextoModal("");
+                        }}
                         className="hover:bg-slate-950/50 cursor-pointer transition-colors"
                       >
                         <td className="py-2.5 px-3">
@@ -444,8 +486,9 @@ export default function DashboardCompanhiasPage() {
                         <td className="py-2.5 px-3 text-center font-bold text-amber-400">{man}</td>
                         <td className="py-2.5 px-3 text-center font-bold text-rose-400">{baix}</td>
                         <td className="py-2.5 px-3 text-right">
-                          <button className="px-2.5 py-1 bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-all text-[11px] font-semibold">
-                            Ver Viaturas
+                          <button className="px-2.5 py-1 bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-all text-[11px] font-semibold inline-flex items-center gap-1">
+                            <span>Ver Viaturas</span>
+                            <ChevronRight size={12} />
                           </button>
                         </td>
                       </tr>
@@ -458,27 +501,27 @@ export default function DashboardCompanhiasPage() {
 
         </ContentScrollArea>
 
-        {/* MODAL COM A LISTA COMPLETA DE VEÍCULOS AO CLICAR EM UMA CIA */}
+        {/* MODAL / DRAWER LATERAL DE VIATURAS DA UNIDADE */}
         {companhiaSelecionada && (
           <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex justify-end animate-in fade-in duration-200">
-            <div className="w-full max-w-2xl bg-slate-900 border-l border-slate-800 h-full p-6 flex flex-col justify-between shadow-2xl overflow-y-auto">
+            <div className="w-full max-w-2xl bg-slate-900 border-l border-slate-800 h-full p-4 sm:p-6 flex flex-col justify-between shadow-2xl overflow-y-auto">
               
               <div>
                 {/* Header do Modal */}
                 <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-blue-600/10 border border-blue-500/20 rounded-xl text-blue-400">
+                  <div className="flex items-center gap-3 min-w-0 pr-2">
+                    <div className="p-2.5 bg-blue-600/10 border border-blue-500/20 rounded-xl text-blue-400 shrink-0">
                       <Building2 size={22} />
                     </div>
-                    <div>
-                      <h2 className="text-base font-bold text-slate-100">{companhiaSelecionada.nome}</h2>
-                      <p className="text-xs text-slate-400">{companhiaSelecionada.cidade} — Responsável: {companhiaSelecionada.comandante}</p>
+                    <div className="min-w-0">
+                      <h2 className="text-base font-bold text-slate-100 truncate">{companhiaSelecionada.nome}</h2>
+                      <p className="text-xs text-slate-400 truncate">{companhiaSelecionada.cidade} — Responsável: {companhiaSelecionada.comandante}</p>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setCompanhiaSelecionada(null)}
-                    className="p-2 rounded-lg bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer"
+                    className="p-2 rounded-lg bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer shrink-0"
                   >
                     <X size={18} />
                   </button>
@@ -492,47 +535,48 @@ export default function DashboardCompanhiasPage() {
                     placeholder="Buscar por prefixo, placa ou modelo nesta unidade..."
                     value={filtroTextoModal}
                     onChange={(e) => setFiltroTextoModal(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600 transition-all"
                   />
                 </div>
 
                 {/* Inventário */}
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2">
                     <Car size={14} className="text-blue-500" />
                     Viaturas Alocadas ({companhiaSelecionada.viaturas.length})
                   </h3>
 
-                  {companhiaSelecionada.viaturas
-                    .filter(v => 
-                      v.prefixo.toLowerCase().includes(filtroTextoModal.toLowerCase()) ||
-                      v.placa.toLowerCase().includes(filtroTextoModal.toLowerCase()) ||
-                      v.modelo.toLowerCase().includes(filtroTextoModal.toLowerCase())
-                    )
-                    .map((v, idx) => (
+                  {viaturasModalFiltradas.length === 0 ? (
+                    <div className="text-center py-8 bg-slate-950/40 rounded-xl border border-slate-800/50">
+                      <Search className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+                      <p className="text-xs text-slate-400 font-medium">Nenhuma viatura encontrada para este termo.</p>
+                    </div>
+                  ) : (
+                    viaturasModalFiltradas.map((v, idx) => (
                       <div 
                         key={idx}
-                        className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-3.5 flex items-center justify-between hover:border-slate-700 transition-all"
+                        className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-3.5 flex items-center justify-between hover:border-slate-700 transition-all gap-3"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-blue-400">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-blue-400 shrink-0">
                             <Radio size={18} />
                           </div>
-                          <div>
+                          <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-bold text-slate-100">{v.prefixo}</span>
+                              <span className="text-sm font-bold text-slate-100 font-mono">{v.prefixo}</span>
                               <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">{v.placa}</span>
                             </div>
-                            <p className="text-xs text-slate-400 mt-0.5">{v.modelo} • <span className="text-slate-500">{v.tipo}</span></p>
+                            <p className="text-xs text-slate-400 mt-0.5 truncate">{v.modelo} • <span className="text-slate-500">{v.tipo}</span></p>
                           </div>
                         </div>
 
-                        <div className="text-right">
+                        <div className="text-right shrink-0">
                           <div className="mb-1">{getStatusBadge(v.status)}</div>
                           <p className="text-[10px] font-mono text-slate-500">{v.km} km</p>
                         </div>
                       </div>
-                    ))}
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -540,7 +584,7 @@ export default function DashboardCompanhiasPage() {
               <div className="pt-4 border-t border-slate-800 mt-6">
                 <button
                   onClick={() => setCompanhiaSelecionada(null)}
-                  className="w-full py-2 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-medium text-xs rounded-xl transition-all cursor-pointer"
+                  className="w-full py-2.5 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-medium text-xs rounded-xl transition-all cursor-pointer"
                 >
                   Fechar Painel
                 </button>

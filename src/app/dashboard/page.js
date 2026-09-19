@@ -159,28 +159,28 @@ export default function DashboardPrincipalPage() {
   if (loading) return <LoadingScreen mensagem="Carregando painel de controle..." />;
 
   return (
-    <DashboardWrapper>
-      <SidebarArea>
+    <DashboardWrapper className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row">
+      <SidebarArea className="w-full md:w-64 shrink-0">
         <Sidebar />
       </SidebarArea>
 
-      <MainContent>
+      <MainContent className="flex-1 flex flex-col min-w-0 w-full p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
         {/* Cabeçalho Responsivo */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-slate-800/80 mb-3 sm:mb-4 shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 sm:pb-4 border-b border-slate-800/80 shrink-0">
           <div>
-            <h1 className="text-base sm:text-lg font-bold text-white flex items-center gap-2 tracking-tight">
-              <ShieldCheck className="text-blue-500 shrink-0" size={20} />
+            <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 tracking-tight">
+              <ShieldCheck className="text-blue-500 shrink-0" size={22} />
               <span>Painel de Controle de Frota</span>
             </h1>
-            <p className="text-[11px] sm:text-xs text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
               Visão consolidada da operacionalidade, custos operacionais e revisões.
             </p>
           </div>
 
-          <div className="w-full sm:w-auto">
+          <div className="w-full sm:w-auto shrink-0">
             <Link href="/dashboard/viaturas/nova" className="w-full sm:w-auto block">
-              <HeaderActionButton variant="primary" className="w-full sm:w-auto justify-center text-xs">
-                <Plus size={15} />
+              <HeaderActionButton variant="primary" className="w-full sm:w-auto justify-center text-xs sm:text-sm py-2">
+                <Plus size={16} />
                 <span>Nova Viatura</span>
               </HeaderActionButton>
             </Link>
@@ -188,27 +188,27 @@ export default function DashboardPrincipalPage() {
         </div>
 
         {/* Área Rolar Conteúdo */}
-        <ContentScrollArea className="space-y-4 sm:space-y-6 w-full">
+        <ContentScrollArea className="space-y-4 sm:space-y-6 w-full flex-1 min-h-0">
           
           {/* CARDS SUPERIORES - MÉTRICAS PRINCIPAIS */}
-          <CardsGrid>
+          <CardsGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* Card 1: Taxa Operacional */}
             <DashboardCard>
               <div className="flex flex-col justify-between h-full space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Taxa Operacional
                   </span>
-                  <div className="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg border border-blue-500/20">
-                    <Car size={16} />
+                  <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg border border-blue-500/20">
+                    <Car size={18} />
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl sm:text-2xl font-bold font-mono text-white">{taxaOperacional}%</span>
-                    <span className="text-[11px] text-emerald-400 font-semibold truncate">{metricas.prontas} de {metricas.totalViaturas} prontas</span>
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-2xl sm:text-3xl font-bold font-mono text-white">{taxaOperacional}%</span>
+                    <span className="text-xs text-emerald-400 font-semibold truncate">{metricas.prontas} de {metricas.totalViaturas} prontas</span>
                   </div>
                   
                   <div className="w-full bg-slate-800 h-2 rounded-full mt-2.5 overflow-hidden">
@@ -225,29 +225,29 @@ export default function DashboardPrincipalPage() {
             <DashboardCard>
               <div className="flex flex-col justify-between h-full space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Fora de Operação
                   </span>
-                  <div className="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg border border-amber-500/20">
-                    <Wrench size={16} />
+                  <div className="p-2 bg-amber-500/10 text-amber-400 rounded-lg border border-amber-500/20">
+                    <Wrench size={18} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-xl sm:text-2xl font-bold font-mono text-white">
+                    <span className="text-2xl sm:text-3xl font-bold font-mono text-white">
                       {metricas.manutencao + metricas.inoperantes}
                     </span>
                     <span className="text-xs text-slate-400">veículos baixados</span>
                   </div>
 
-                  <div className="flex items-center gap-3 mt-2 text-[11px]">
+                  <div className="flex items-center gap-3 mt-2 text-xs flex-wrap">
                     <span className="flex items-center gap-1 text-amber-400 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
                       {metricas.manutencao} manutenção
                     </span>
                     <span className="flex items-center gap-1 text-rose-400 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                      <span className="w-2 h-2 rounded-full bg-rose-400" />
                       {metricas.inoperantes} inoperantes
                     </span>
                   </div>
@@ -259,20 +259,20 @@ export default function DashboardPrincipalPage() {
             <DashboardCard>
               <div className="flex flex-col justify-between h-full space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Investimento no Mês
                   </span>
-                  <div className="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20">
-                    <DollarSign size={16} />
+                  <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20">
+                    <DollarSign size={18} />
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-lg sm:text-xl font-bold font-mono text-emerald-400">
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-emerald-400">
                     {formatarMoeda(metricas.custoMesAtual)}
                   </div>
 
-                  <div className="flex items-center gap-1.5 mt-2 text-[11px]">
+                  <div className="flex items-center gap-1.5 mt-2 text-xs">
                     {metricas.variacaoCustoMes <= 0 ? (
                       <span className="text-emerald-400 font-bold flex items-center gap-0.5">
                         <TrendingDown size={14} />
@@ -294,20 +294,20 @@ export default function DashboardPrincipalPage() {
             <DashboardCard>
               <div className="flex flex-col justify-between h-full space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Quilometragem Mês
                   </span>
-                  <div className="p-1.5 bg-purple-500/10 text-purple-400 rounded-lg border border-purple-500/20">
-                    <Gauge size={16} />
+                  <div className="p-2 bg-purple-500/10 text-purple-400 rounded-lg border border-purple-500/20">
+                    <Gauge size={18} />
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold font-mono text-white">
+                  <div className="text-2xl sm:text-3xl font-bold font-mono text-white">
                     {metricas.kmTotalRodadoMes.toLocaleString("pt-BR")} <span className="text-xs text-slate-400 font-normal">km</span>
                   </div>
 
-                  <div className="flex items-center justify-between mt-2 text-[11px] text-slate-400">
+                  <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
                     <span>Revisões Pendentes:</span>
                     <span className="font-bold text-amber-400 font-mono">{metricas.revisoesPendentes} viaturas</span>
                   </div>
@@ -333,14 +333,14 @@ export default function DashboardPrincipalPage() {
                   </span>
                 </div>
 
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {alertasRevisao.map((alerta) => {
                     const kmFaltantes = alerta.kmProximaRevisao - alerta.kmAtual;
                     return (
-                      <div key={alerta.id} className="bg-slate-950/40 border border-slate-800/80 rounded-lg p-2.5 sm:p-3 space-y-1">
+                      <div key={alerta.id} className="bg-slate-950/40 border border-slate-800/80 rounded-lg p-3 space-y-1.5">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="font-mono font-bold text-white text-xs">{alerta.prefixo}</span>
-                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                          <span className="font-mono font-bold text-white text-xs sm:text-sm">{alerta.prefixo}</span>
+                          <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded shrink-0 ${
                             alerta.urgencia === "critica" 
                               ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                               : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
@@ -349,10 +349,10 @@ export default function DashboardPrincipalPage() {
                           </span>
                         </div>
 
-                        <p className="text-[11px] text-slate-300 font-medium truncate">{alerta.modelo}</p>
-                        <p className="text-[10px] text-slate-500 truncate">{alerta.subunidade}</p>
+                        <p className="text-xs text-slate-300 font-medium truncate">{alerta.modelo}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{alerta.subunidade}</p>
 
-                        <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400 border-t border-slate-800/80 pt-1.5 font-mono">
+                        <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 font-mono">
                           <span>Atual: <strong>{alerta.kmAtual.toLocaleString("pt-BR")} km</strong></span>
                           <span>Revisão: <strong>{alerta.kmProximaRevisao.toLocaleString("pt-BR")} km</strong></span>
                         </div>
@@ -363,7 +363,7 @@ export default function DashboardPrincipalPage() {
               </div>
 
               <Link href="/dashboard/viaturas" className="block pt-2">
-                <button className="w-full text-center text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center justify-center gap-1 py-1 transition-colors cursor-pointer">
+                <button className="w-full text-center text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center justify-center gap-1 py-1.5 transition-colors cursor-pointer">
                   <span>Ver todas na frota</span>
                   <ChevronRight size={14} />
                 </button>
@@ -385,21 +385,21 @@ export default function DashboardPrincipalPage() {
                   </Link>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {ultimasManutencoes.map((os) => (
                     <div 
                       key={os.id} 
-                      className="bg-slate-950/40 border border-slate-800/80 hover:border-slate-700 rounded-lg p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-all"
+                      className="bg-slate-950/40 border border-slate-800/80 hover:border-slate-700 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
                     >
                       {/* Prefixo, Oficina e Descrição */}
-                      <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
-                        <span className="font-mono font-bold text-white text-xs bg-slate-900 px-2 py-1 rounded border border-slate-800 shrink-0 mt-0.5 sm:mt-0">
+                      <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+                        <span className="font-mono font-bold text-white text-xs bg-slate-900 px-2.5 py-1 rounded border border-slate-800 shrink-0 mt-0.5 sm:mt-0">
                           {os.prefixo}
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-slate-200 text-xs truncate">{os.oficina}</span>
-                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                            <span className="font-semibold text-slate-200 text-xs sm:text-sm truncate">{os.oficina}</span>
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
                               os.tipo === "Preventiva"
                                 ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
                                 : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
@@ -407,22 +407,22 @@ export default function DashboardPrincipalPage() {
                               {os.tipo}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-400 truncate mt-0.5">{os.descricao}</p>
+                          <p className="text-xs text-slate-400 truncate mt-0.5">{os.descricao}</p>
                         </div>
                       </div>
 
                       {/* Valor e Status */}
                       <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800/50 shrink-0">
-                        <span className="font-mono font-bold text-emerald-400 text-xs tracking-tight">
+                        <span className="font-mono font-bold text-emerald-400 text-xs sm:text-sm tracking-tight">
                           {formatarMoeda(os.valor)}
                         </span>
 
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded ${
+                        <span className={`inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded ${
                           os.status === "Concluída"
                             ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                             : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                         }`}>
-                          {os.status === "Concluída" ? <CheckCircle2 size={11} /> : <Wrench size={11} />}
+                          {os.status === "Concluída" ? <CheckCircle2 size={12} /> : <Wrench size={12} />}
                           <span>{os.status}</span>
                         </span>
                       </div>
@@ -432,7 +432,7 @@ export default function DashboardPrincipalPage() {
                 </div>
               </div>
 
-              <div className="border-t border-slate-800/80 pt-2.5 mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-400">
+              <div className="border-t border-slate-800/80 pt-3 mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
                 <span>Atualizado via integração de oficinas credenciadas.</span>
                 <Link href="/dashboard/viaturas" className="text-blue-400 hover:underline font-medium">
                   Acessar cadastro de frota →

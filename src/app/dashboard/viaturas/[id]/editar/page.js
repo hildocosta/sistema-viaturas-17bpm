@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { Car, ChevronRight, ChevronLeft, Save, Edit3, ArrowLeft } from "lucide-react";
 
-import Sidebar from "@/components/sidebar/page";
+import Sidebar from "@/components/sidebar";
 import FormStepper from "@/components/viaturas/FormStepper"; 
 import EditViaturaModal from "@/components/viaturas/EditViaturaModal";
 import { DashboardWrapper, SidebarArea, MainContent, ContentScrollArea } from "@/components/ui/PageLayout";
@@ -13,7 +13,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { PrimaryButton, SecondaryButton } from "@/components/ui/Button";
 import { SuccessAlert } from "@/components/ui/SuccessAlert";
 
-// Imports exatos baseados no seu arquivo ViaturaFormSteps.js
+// Steps do Formulário de Viatura
 import { 
   StepIdentificacao, 
   StepEspecificacoes, 
@@ -93,29 +93,42 @@ export default function EditarViaturaPage() {
       </SidebarArea>
 
       <MainContent>
-        <PageHeader
-          icon={Car}
-          title={`Editar Viatura — ${formData.prefixo}`}
-          description="17º Batalhão de Polícia Militar — Atualização de Ficha de Cadastro"
-          action={
-            <div className="flex items-center gap-2">
-              <Link href={`/dashboard/viaturas/${viaturaId}`}>
-                <SecondaryButton icon={ArrowLeft}>Voltar</SecondaryButton>
-              </Link>
-              <SecondaryButton 
-                icon={Edit3} 
-                onClick={() => setViaturaParaEditar(formData)}
-              >
-                Edição Rápida
-              </SecondaryButton>
-            </div>
-          }
-        />
+        {/* Header Responsivo */}
+        <div className="pb-3 border-b border-slate-800/80 mb-3 shrink-0">
+          <PageHeader
+            icon={Car}
+            title={`Editar Viatura — ${formData.prefixo}`}
+            description="17º Batalhão de Polícia Militar — Atualização de Ficha de Cadastro"
+            action={
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <Link href={`/dashboard/viaturas/${viaturaId}`} className="w-full sm:w-auto">
+                  <SecondaryButton icon={ArrowLeft} className="w-full justify-center">
+                    Voltar
+                  </SecondaryButton>
+                </Link>
+                <SecondaryButton 
+                  icon={Edit3} 
+                  onClick={() => setViaturaParaEditar(formData)}
+                  className="w-full sm:w-auto justify-center"
+                >
+                  <span className="hidden sm:inline">Edição Rápida</span>
+                  <span className="sm:hidden">Rápida</span>
+                </SecondaryButton>
+              </div>
+            }
+          />
+        </div>
 
+        {/* Conteúdo Rolável */}
         <ContentScrollArea>
-          <div className="max-w-3xl mx-auto space-y-6">
-            <FormStepper steps={STEPS} currentStep={currentStep} />
+          <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 pb-6">
+            
+            {/* Stepper Responsivo */}
+            <div className="overflow-x-auto pb-2 custom-scrollbar">
+              <FormStepper steps={STEPS} currentStep={currentStep} />
+            </div>
 
+            {/* Alerta de Sucesso */}
             {sucesso && (
               <SuccessAlert 
                 title="Viatura atualizada com sucesso!" 
@@ -123,8 +136,9 @@ export default function EditarViaturaPage() {
               />
             )}
 
-            <form onSubmit={currentStep === 3 ? handleSubmit : handleNext}>
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6 min-h-70">
+            {/* Formulário com Animações / Card Adaptativo */}
+            <form onSubmit={currentStep === 3 ? handleSubmit : handleNext} className="space-y-4">
+              <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 sm:p-6 min-h-[320px] backdrop-blur-md">
                 {currentStep === 1 && (
                   <StepIdentificacao formData={formData} handleChange={handleChange} />
                 )}
@@ -136,20 +150,21 @@ export default function EditarViaturaPage() {
                 )}
               </div>
 
-              {/* Controles de Navegação do Stepper */}
-              <div className="flex items-center justify-between">
+              {/* Controles de Navegação Flutuantes / Responsivos */}
+              <div className="flex items-center justify-between gap-3 pt-2">
                 <SecondaryButton
                   type="button"
                   onClick={handleBack}
                   disabled={currentStep === 1}
                   icon={ChevronLeft}
+                  className="px-3 sm:px-4"
                 >
                   Anterior
                 </SecondaryButton>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   {currentStep < 3 ? (
-                    <PrimaryButton type="submit" icon={ChevronRight}>
+                    <PrimaryButton type="submit" icon={ChevronRight} className="px-4 sm:px-5">
                       Próximo
                     </PrimaryButton>
                   ) : (
@@ -157,8 +172,9 @@ export default function EditarViaturaPage() {
                       type="submit"
                       disabled={loading || sucesso}
                       icon={Save}
+                      className="px-4 sm:px-5"
                     >
-                      {loading ? "Salvando Alterações..." : "Salvar Alterações"}
+                      {loading ? "Salvando..." : "Salvar Alterações"}
                     </PrimaryButton>
                   )}
                 </div>
@@ -167,6 +183,7 @@ export default function EditarViaturaPage() {
           </div>
         </ContentScrollArea>
 
+        {/* Modal de Edição Rápida */}
         <EditViaturaModal 
           viaturaParaEditar={viaturaParaEditar}
           setViaturaParaEditar={setViaturaParaEditar}
