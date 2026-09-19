@@ -22,21 +22,18 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
 
-  // Fecha o menu mobile e rola suavemente para o topo da página
-  const closeMenu = () => {
-    setIsOpen(false);
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  // Verificação precisa de rota ativa (suporta rotas exatas e sub-rotas)
   const isRouteActive = (route) => {
-    if (route === "/dashboard") {
-      return pathname === "/dashboard";
+    if (
+      route === "/dashboard" || 
+      route === "/dashboard/viaturas" || 
+      route === "/dashboard/companhias" ||
+      route === "/dashboard/companhias/dashboard"
+    ) {
+      return pathname === route;
     }
-    return pathname === route || pathname.startsWith(`${route}/`);
+    return pathname?.startsWith(route);
   };
 
   const menuItems = [
@@ -89,8 +86,8 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* 1. TOPO MÓVEL (Visível apenas em dispositivos móveis - hidden em md:) */}
-      <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-4 py-3 sticky top-0 z-40">
+      {/* 1. CABEÇALHO MÓVEL (100% da largura, cola no topo do ecrã) */}
+      <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-4 py-3 w-full sticky top-0 left-0 right-0 z-40">
         <div className="flex items-center gap-3">
           <div className="p-1.5 bg-blue-600/10 border border-blue-500/20 rounded-xl">
             <Image
@@ -117,22 +114,23 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* 2. OVERLAY ESCURO (Para fechar ao clicar fora no mobile) */}
+      {/* 2. OVERLAY ESCURO COM BLUR */}
       {isOpen && (
         <div 
           onClick={closeMenu} 
-          className="md:hidden fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-40"
+          className="md:hidden fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-40 transition-opacity"
         />
       )}
 
-      {/* 3. SIDEBAR (Fixa em Desktop / Deslizante no Mobile) */}
+      {/* 3. SIDEBAR (Drawer Deslizante no Telemóvel / Painel Fixo em Desktop) */}
       <aside
         className={`
           fixed md:relative top-0 left-0 z-50 md:z-auto
-          w-64 md:w-full h-full bg-slate-900 border-r md:border border-slate-800 
-          md:rounded-2xl p-4 flex flex-col justify-between container-sombrio select-none
+          w-[280px] sm:w-80 md:w-full h-full min-h-screen md:min-h-0 bg-slate-900 
+          border-r md:border border-slate-800 md:rounded-2xl p-4 
+          flex flex-col justify-between select-none
           transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"}
         `}
       >
         <div>
@@ -151,15 +149,17 @@ export default function Sidebar() {
               <h1 className="text-sm font-bold text-white tracking-tight">17º BPM</h1>
               <p className="text-[10px] text-slate-400 font-mono">Gestão Operacional</p>
             </div>
-
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-500/40 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
           </div>
 
-          {/* Botão Fechar para Mobile dentro da Sidebar */}
+          {/* Cabeçalho Fechar no Telemóvel */}
           <div className="md:hidden flex justify-between items-center pb-4 mb-4 border-b border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Navegação</span>
-            <button onClick={closeMenu} className="text-slate-400 hover:text-white p-1 cursor-pointer">
-              <X size={18} />
+            <button 
+              onClick={closeMenu} 
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition cursor-pointer"
+            >
+              <X size={20} />
             </button>
           </div>
 
@@ -203,7 +203,7 @@ export default function Sidebar() {
 
         {/* Rodapé da Sidebar - Usuário & Sair */}
         <div className="relative pt-4 mt-auto">
-          <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
 
           <div className="flex items-center justify-between px-3 py-2 bg-slate-950/60 border border-slate-800/80 rounded-xl">
             <div className="min-w-0">
