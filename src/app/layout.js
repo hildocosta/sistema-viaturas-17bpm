@@ -11,7 +11,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Configurações do Aplicativo / PWA
 export const metadata = {
   title: "17º BPM - Gestão Operacional de Frota",
   description: "Sistema de controle e disponibilidade da frota policial do 17º BPM",
@@ -19,11 +18,10 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Frota 17º BPM",
+    title: "Checkin KM",
   },
 };
 
-// Configurações da Viewport (Cor da barra e bloqueio de zoom)
 export const viewport = {
   themeColor: "#020617",
   width: "device-width",
@@ -39,7 +37,7 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="apple-touch-icon" href="/assets/image/icon.png" />
       </head>
       <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
         {children}
