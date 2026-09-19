@@ -11,9 +11,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Configurações do Aplicativo / PWA
 export const metadata = {
   title: "17º BPM - Gestão Operacional de Frota",
   description: "Sistema de controle e disponibilidade da frota policial do 17º BPM",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Frota 17º BPM",
+  },
+};
+
+// Configurações da Viewport (Cor da barra e bloqueio de zoom)
+export const viewport = {
+  themeColor: "#020617",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({ children }) {
@@ -22,7 +38,12 @@ export default function RootLayout({ children }) {
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">{children}</body>
+      <head>
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+      </head>
+      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
+        {children}
+      </body>
     </html>
   );
 }
