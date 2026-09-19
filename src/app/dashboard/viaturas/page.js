@@ -122,11 +122,12 @@ export default function ListaViaturasPage() {
               description="Gestão de veículos, controle de rodagem e prontidão operacional."
             />
             <div className="w-full sm:w-auto shrink-0">
-              <Link href="/dashboard/viaturas/nova" className="block w-full">
-                <PrimaryButton icon={Plus} className="w-full sm:w-auto justify-center">
-                  Nova Viatura
-                </PrimaryButton>
-              </Link>
+               <Link href="/dashboard/viaturas/nova" className="w-full sm:w-auto block">
+              <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20">
+                <Plus size={16} />
+                <span>Nova Viatura</span>
+              </button>
+            </Link>
             </div>
           </div>
 
