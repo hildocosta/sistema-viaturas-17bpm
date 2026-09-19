@@ -1,173 +1,113 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Sidebar from "@/components/sidebar/page";
+import ViaturasTable from "@/components/ViaturasTable"; // Ajuste o caminho do seu componente
+import { Plus, Car } from "lucide-react";
 import Link from "next/link";
-import { Eye, Pencil } from "lucide-react";
-import StatusBadge from "@/components/ui/StatusBadge";
 
-export default function ViaturasTable({ viaturas = [], formatarMoeda, onEdit }) {
-  if (!viaturas || viaturas.length === 0) {
-    return (
-      <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-8 text-center text-slate-500 text-xs">
-        Nenhuma viatura cadastrada.
-      </div>
-    );
-  }
+export default function ViaturasPage() {
+  const [viaturas, setViaturas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function carregarViaturas() {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/viaturas");
+        if (!res.ok) throw new Error("Erro ao carregar");
+        const data = await res.json();
+        setViaturas(data);
+      } catch (err) {
+        // Dados Mockados para contingência
+        setViaturas([
+          {
+            id: "1",
+            prefixo: "L0117",
+            placa: "ABC-1234",
+            modelo: "Toyota Hilux SW4",
+            ano: 2022,
+            subunidade: "ROTAM / 17º BPM",
+            kmAtual: 34200,
+            status: "PRONTA",
+            custoTotalManutencao: 2400.00
+          },
+          {
+            id: "2",
+            prefixo: "L0204",
+            placa: "DEF-5678",
+            modelo: "Renault Duster",
+            ano: 2021,
+            subunidade: "1ª Cia / SJP",
+            kmAtual: 68500,
+            status: "MANUTENCAO",
+            custoTotalManutencao: 5120.00
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarViaturas();
+  }, []);
+
+  const formatarMoeda = (valor) => {
+    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valor || 0);
+  };
+
+  const handleEdit = (viatura) => {
+    console.log("Editar viatura:", viatura);
+    // Adicione a lógica de abertura do modal de edição aqui
+  };
 
   return (
-    <div className="bg-slate-950/60 border border-slate-800 rounded-2xl overflow-hidden mb-4">
-      {/* ------------------------------------------------------------- */}
-      {/* 1. VISÃO EM CARDS (Exibida em celulares e tablets - hidden md:block) */}
-      {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 gap-3 p-3 md:hidden">
-        {viaturas.map((item) => (
-          <div
-            key={item.id}
-            className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:border-slate-700 transition-colors"
-          >
-            {/* Cabecalho do Card: Prefixo + Status */}
-            <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-2.5">
-              <div>
-                <div className="font-bold font-mono text-sm text-white flex items-center gap-2">
-                  <span>{item.prefixo}</span>
-                  <span className="text-[10px] font-normal text-slate-500 font-mono">
-                    ({item.placa})
-                  </span>
-                </div>
-                <div className="text-xs text-slate-300 font-medium mt-0.5">
-                  {item.modelo} <span className="text-slate-500 text-[11px]">• Ano: {item.ano}</span>
-                </div>
-              </div>
-              <div className="shrink-0">
-                <StatusBadge status={item.status} />
-              </div>
-            </div>
+    <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden bg-slate-950 text-slate-100">
+      
+      {/* 1. Sidebar e Menu Mobile do Topo */}
+      <div className="w-full lg:w-80 h-auto lg:h-full shrink-0">
+        <Sidebar />
+      </div>
 
-            {/* Corpo do Card: Informações Secundárias */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span className="text-[10px] text-slate-500 uppercase font-semibold block">Subunidade</span>
-                <span className="text-slate-300 font-medium truncate block">{item.subunidade || "N/I"}</span>
-              </div>
-              <div>
-                <span className="text-[10px] text-slate-500 uppercase font-semibold block">Quilometragem</span>
-                <span className="font-mono text-slate-200 font-semibold">
-                  {item.kmAtual ? item.kmAtual.toLocaleString("pt-BR") : 0} km
-                </span>
-              </div>
-            </div>
-
-            {/* Rodapé do Card: Valor e Ações */}
-            <div className="flex items-center justify-between border-t border-slate-800/80 pt-2.5 mt-0.5">
-              <div>
-                <span className="text-[10px] text-slate-500 uppercase font-semibold block">Investimento</span>
-                <span className="font-mono font-bold text-emerald-400 text-xs">
-                  {formatarMoeda ? formatarMoeda(item.custoTotalManutencao) : `R$ ${item.custoTotalManutencao || 0}`}
-                </span>
-              </div>
-
-              {/* Botões de Ação Adaptados para Toque */}
-              <div className="flex items-center gap-2">
-                <Link href={`/dashboard/viaturas/${item.id}`} className="flex-1">
-                  <button
-                    type="button"
-                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-blue-600/20 text-slate-300 hover:text-blue-400 border border-slate-700 hover:border-blue-500/30 rounded-lg text-xs font-semibold transition-all cursor-pointer active:scale-95"
-                  >
-                    <Eye size={14} />
-                    <span>Ver</span>
-                  </button>
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (onEdit) onEdit(item);
-                  }}
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-amber-600/20 text-slate-300 hover:text-amber-400 border border-slate-700 hover:border-amber-500/30 rounded-lg text-xs font-semibold transition-all cursor-pointer active:scale-95"
-                >
-                  <Pencil size={14} />
-                  <span>Editar</span>
-                </button>
-              </div>
-            </div>
+      {/* 2. Área Principal de Conteúdo */}
+      <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 min-w-0">
+        
+        {/* Cabeçalho */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80 shrink-0">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 tracking-tight">
+              <Car className="text-blue-500 shrink-0" size={24} />
+              <span>Gestão de Viaturas</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              Consulte e gira a frota de veículos cadastrados.
+            </p>
           </div>
-        ))}
-      </div>
 
-      {/* ------------------------------------------------------------- */}
-      {/* 2. VISÃO EM TABELA (Exibida a partir de Desktops - hidden md:block) */}
-      {/* ------------------------------------------------------------- */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr className="border-b border-slate-800 bg-slate-950 text-slate-400 uppercase font-semibold text-[10px] tracking-wider">
-              <th className="py-3 px-4">Prefixo / Placa</th>
-              <th className="py-3 px-4">Modelo / Ano</th>
-              <th className="py-3 px-4">Subunidade</th>
-              <th className="py-3 px-4">Quilometragem</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Investimento</th>
-              <th className="py-3 px-4 text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800/60 text-slate-300">
-            {viaturas.map((item) => (
-              <tr key={item.id} className="hover:bg-slate-800/30 transition-colors group">
-                <td className="py-3 px-4">
-                  <div className="font-bold font-mono text-white group-hover:text-blue-400 transition-colors">
-                    {item.prefixo}
-                  </div>
-                  <div className="text-[10px] font-mono text-slate-500">{item.placa}</div>
-                </td>
-                <td className="py-3 px-4">
-                  <div className="font-medium text-slate-200">{item.modelo}</div>
-                  <div className="text-[10px] text-slate-500">Ano: {item.ano}</div>
-                </td>
-                <td className="py-3 px-4 font-medium text-slate-300">
-                  {item.subunidade}
-                </td>
-                <td className="py-3 px-4 font-mono font-semibold text-slate-200">
-                  {item.kmAtual ? item.kmAtual.toLocaleString("pt-BR") : 0} km
-                </td>
-                <td className="py-3 px-4">
-                  <StatusBadge status={item.status} />
-                </td>
-                <td className="py-3 px-4 font-mono font-bold text-emerald-400">
-                  {formatarMoeda ? formatarMoeda(item.custoTotalManutencao) : `R$ ${item.custoTotalManutencao || 0}`}
-                </td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center justify-center gap-1.5">
-                    <Link href={`/dashboard/viaturas/${item.id}`}>
-                      <button 
-                        type="button"
-                        title="Ver Prontuário"
-                        className="p-1.5 bg-slate-900 hover:bg-blue-600/20 text-slate-400 hover:text-blue-400 border border-slate-800 hover:border-blue-500/30 rounded-lg transition-all cursor-pointer active:scale-95"
-                      >
-                        <Eye size={15} />
-                      </button>
-                    </Link>
+          <div className="w-full sm:w-auto shrink-0">
+            <Link href="/dashboard/viaturas/nova" className="w-full sm:w-auto block">
+              <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs sm:text-sm px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20">
+                <Plus size={16} />
+                <span>Nova Viatura</span>
+              </button>
+            </Link>
+          </div>
+        </div>
 
-                    <button 
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (onEdit) onEdit(item);
-                      }}
-                      title="Editar Viatura"
-                      className="p-1.5 bg-slate-900 hover:bg-amber-600/20 text-slate-400 hover:text-amber-400 border border-slate-800 hover:border-amber-500/30 rounded-lg transition-all cursor-pointer active:scale-95"
-                    >
-                      <Pencil size={15} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        {/* Tabela / Cards de Viaturas */}
+        {loading ? (
+          <div className="text-center py-10 text-slate-500 text-sm">
+            Carregando lista de viaturas...
+          </div>
+        ) : (
+          <ViaturasTable 
+            viaturas={viaturas} 
+            formatarMoeda={formatarMoeda} 
+            onEdit={handleEdit} 
+          />
+        )}
+
+      </main>
     </div>
   );
 }

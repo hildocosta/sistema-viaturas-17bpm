@@ -105,8 +105,8 @@ export default function ListaViaturasPage() {
   return (
     <div className="flex flex-col lg:flex-row h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans p-2 sm:p-4 gap-3 sm:gap-4 antialiased">
       
-      {/* Sidebar oculta em dispositivos móveis (O Topo Móvel interno do Sidebar assume no mobile) */}
-      <div className="hidden lg:block lg:w-80 h-full shrink-0">
+      {/* Sidebar - Fixa o menu superior no mobile e a barra lateral no desktop */}
+      <div className="w-full lg:w-80 h-auto lg:h-full shrink-0">
         <Sidebar />
       </div>
 
