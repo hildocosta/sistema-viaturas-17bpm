@@ -119,7 +119,7 @@ export default function ListaViaturasPage() {
             <PageHeader
               icon={Car}
               title="Frota de Viaturas"
-              description="Gestão de veículos, controle de rodagem e prontidão operacional."
+              description="Gestão de veículos."
             />
             <div className="w-full sm:w-auto shrink-0">
                <Link href="/dashboard/viaturas/nova" className="w-full sm:w-auto block">
