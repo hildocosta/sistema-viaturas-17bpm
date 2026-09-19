@@ -39,9 +39,11 @@ export default function ViaturaFilters({
               className="bg-transparent text-slate-300 focus:outline-none cursor-pointer"
             >
               <option value="TODOS" className="bg-slate-900 text-slate-200">Todos os Status</option>
-              <option value="Pronta" className="bg-slate-900 text-slate-200">Pronta</option>
-              <option value="Em Manutenção" className="bg-slate-900 text-slate-200">Em Manutenção</option>
-              <option value="Inoperante" className="bg-slate-900 text-slate-200">Inoperante</option>
+              <option value="Disponível" className="bg-slate-900 text-slate-200">Disponível</option>
+              <option value="Indisponível - Manutenção" className="bg-slate-900 text-slate-200">Indisponível - Manutenção</option>
+              <option value="Indisponível - Processo Descarga / Leilão" className="bg-slate-900 text-slate-200">Indisponível - Processo Descarga / Leilão</option>
+              <option value="Indisponível - Aguardando Regularização" className="bg-slate-900 text-slate-200">Indisponível - Aguardando Regularização</option>
+              <option value="Indisponível - Sinistro / Inquérito Técnico" className="bg-slate-900 text-slate-200">Indisponível - Sinistro / Inquérito Técnico</option>
             </select>
           </div>
 
