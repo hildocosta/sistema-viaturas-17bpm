@@ -124,13 +124,15 @@ export default function DistribucionCompanhiasPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans p-2 sm:p-4 gap-3 sm:gap-4 antialiased">
-      {/* Sidebar - Oculta em telas muito pequenas se necessário ou responsiva */}
-      <div className="hidden lg:block lg:w-80 h-full shrink-0">
+    <div className="flex flex-col lg:flex-row h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans antialiased p-2 sm:p-4 gap-3 sm:gap-4">
+      
+      {/* Sidebar Wrapper com Z-Index e posições para responsividade */}
+      <div className="w-full lg:w-80 shrink-0 z-30">
         <Sidebar />
       </div>
 
-      <main className="flex-1 h-full bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-800 p-3 sm:p-6 flex flex-col overflow-y-auto relative">
+      {/* Area do Conteúdo */}
+      <main className="flex-1 h-full min-h-0 bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-800 p-3 sm:p-6 flex flex-col overflow-y-auto relative min-w-0">
         <div className="max-w-7xl mx-auto w-full space-y-4 sm:space-y-5">
           
           {/* Header e Busca */}
@@ -157,7 +159,7 @@ export default function DistribucionCompanhiasPage() {
 
           {/* Fitas de Filtros */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none -mx-1 px-1">
-            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1 shrink-0 mr-1 hidden sm:flex">
+            <span className="text-xs font-semibold text-slate-500 items-center gap-1 shrink-0 mr-1 hidden sm:flex">
               <Filter size={14} /> Filtros:
             </span>
             {opcoesFiltro.map((f) => {
