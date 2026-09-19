@@ -1,12 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "react";
+import { useParams } from "next/navigation";
 import { Gauge, User, CheckCircle2, AlertCircle, Car, Loader2, ArrowRight, RefreshCw } from "lucide-react";
 
 export default function CheckinPage() {
   const params = useParams();
-  const prefixo = params?.prefixo || "NÃO INFORMADO";
+  
+  const prefixoParam = Array.isArray(params?.prefixo) 
+    ? params.prefixo[0] 
+    : params?.prefixo;
+
+  const prefixo = prefixoParam || "NÃO INFORMADO";
 
   const [km, setKm] = useState("");
   const [motorista, setMotorista] = useState("");
@@ -48,7 +53,7 @@ export default function CheckinPage() {
     <div className="min-h-dvh bg-slate-950 text-slate-100 flex flex-col justify-center items-center p-3 sm:p-6 select-none">
       <div className="w-full max-w-md bg-slate-900 border border-slate-800/80 rounded-2xl p-5 sm:p-6 shadow-2xl backdrop-blur-md">
         
-        {/* Cabeçalho Responsivo */}
+        {/* Cabeçalho */}
         <div className="flex items-center gap-3 border-b border-slate-800/80 pb-4 mb-5">
           <div className="p-2.5 sm:p-3 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded-xl shrink-0">
             <Car className="w-6 h-6 sm:w-7 sm:h-7" />
@@ -93,7 +98,7 @@ export default function CheckinPage() {
             </button>
           </div>
         ) : (
-          /* Formulário Mobile-First */
+          /* Formulário */
           <form onSubmit={handleSubmit} className="space-y-4">
             {erro && (
               <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3 rounded-xl text-xs sm:text-sm flex items-start gap-2.5 animate-in fade-in duration-150">
@@ -102,7 +107,7 @@ export default function CheckinPage() {
               </div>
             )}
 
-            {/* Campo KM Atual */}
+            {/* Campo KM */}
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
                 KM Atual no Painel <span className="text-rose-400">*</span>
@@ -139,7 +144,7 @@ export default function CheckinPage() {
               </div>
             </div>
 
-            {/* Botão de Envio com feedback tátil */}
+            {/* Botão de Envio */}
             <button
               type="submit"
               disabled={loading || !km}
