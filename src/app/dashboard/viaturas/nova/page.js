@@ -201,7 +201,7 @@ export default function NovaViaturaPage() {
                       <label className={labelClass}>Status Atual</label>
                       <select name="status" value={formData.status} onChange={handleChange} className={inputClass}>
                         <option value="Disponível" className="bg-slate-900">Disponível</option>
-                        <option value="Indisponível" className="bg-slate-900">Indisponível - Aguardando Regularização</option>
+                        <option value="Indisponível" className="bg-slate-900">Indisponível</option>
                         <option value="Manutenção" className="bg-slate-900">Manutenção</option>
                         <option value="Inoperante" className="bg-slate-900">Inoperante</option>
                         <option value="Recolhida" className="bg-slate-900">Recolhida</option>
