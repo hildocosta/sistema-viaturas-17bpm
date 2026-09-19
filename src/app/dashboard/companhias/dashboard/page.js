@@ -8,16 +8,22 @@ import {
   CheckCircle2, 
   Wrench, 
   XCircle, 
-  ChevronRight, 
   X,
   Search,
-  ShieldCheck,
   Radio,
   BarChart3,
   PieChart,
   TrendingUp,
   AlertTriangle
 } from "lucide-react";
+
+import { 
+  DashboardWrapper, 
+  SidebarArea, 
+  MainContent, 
+  ContentScrollArea 
+} from "@/components/layout/DashboardLayout";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function DashboardCompanhiasPage() {
   const [companhiaSelecionada, setCompanhiaSelecionada] = useState(null);
@@ -218,88 +224,86 @@ export default function DashboardCompanhiasPage() {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans p-4 gap-4 antialiased">
-      
+    <DashboardWrapper>
       {/* Sidebar Global */}
-      <div className="w-80 h-full shrink-0">
+      <SidebarArea>
         <Sidebar />
-      </div>
+      </SidebarArea>
 
       {/* Conteúdo do Dashboard */}
-      <main className="flex-1 h-full bg-slate-900 rounded-2xl border border-slate-800 p-6 flex flex-col overflow-y-auto container-sombrio relative">
-        <div className="max-w-7xl mx-auto w-full space-y-6">
+      <MainContent>
+        {/* Cabeçalho Fixo */}
+        <div className="pb-3 border-b border-slate-800/80 mb-3 shrink-0">
+          <PageHeader
+            icon={BarChart3}
+            title="Dashboard de Frota por Companhia"
+            description="Indicadores consolidados e disponibilidade operacional das unidades do 17º BPM"
+            action={
+              <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
+                {["TODAS", "SEDE", "1CIA", "2CIA", "3CIA", "4CIA"].map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setFiltroGrupo(g)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      filtroGrupo === g
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            }
+          />
+        </div>
+
+        {/* ÁREA ROLÁVEL COM CONTEÚDO */}
+        <ContentScrollArea className="space-y-4">
           
-          {/* Cabeçalho */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-            <div>
-              <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-                <BarChart3 className="text-blue-500" size={24} />
-                Dashboard de Frota por Companhia
-              </h1>
-              <p className="text-xs text-slate-400">Indicadores consolidados e disponibilidade operacional das unidades do 17º BPM</p>
-            </div>
-
-            {/* Selector de Filtro de Grupo */}
-            <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
-              {["TODAS", "SEDE", "1CIA", "2CIA", "3CIA", "4CIA"].map((g) => (
-                <button
-                  key={g}
-                  onClick={() => setFiltroGrupo(g)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    filtroGrupo === g
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                      : "text-slate-400 hover:text-slate-200"
-                  }`}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* CARDS DE KPIS EXECUTIVOS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 flex items-center justify-between backdrop-blur-md">
               <div>
-                <p className="text-[11px] font-semibold uppercase text-slate-500">Total de Viaturas</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Total de Viaturas</p>
                 <h3 className="text-2xl font-bold text-slate-100 mt-1">{totalViaturas}</h3>
-                <p className="text-[10px] text-slate-400 mt-1">Em {companhiasFiltradas.length} unidades</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">Em {companhiasFiltradas.length} unidades</p>
               </div>
               <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
-                <Car size={22} />
+                <Car size={20} />
               </div>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 flex items-center justify-between backdrop-blur-md">
               <div>
-                <p className="text-[11px] font-semibold uppercase text-slate-500">Prontas p/ Emprego</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Prontas p/ Emprego</p>
                 <h3 className="text-2xl font-bold text-emerald-400 mt-1">{operacionais}</h3>
-                <p className="text-[10px] text-emerald-500 font-semibold mt-1">{pctOperacional}% da frota pronta</p>
+                <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">{pctOperacional}% da frota pronta</p>
               </div>
               <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
-                <CheckCircle2 size={22} />
+                <CheckCircle2 size={20} />
               </div>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 flex items-center justify-between backdrop-blur-md">
               <div>
-                <p className="text-[11px] font-semibold uppercase text-slate-500">Em Manutenção</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Em Manutenção</p>
                 <h3 className="text-2xl font-bold text-amber-400 mt-1">{manutencao}</h3>
-                <p className="text-[10px] text-amber-500 font-semibold mt-1">{pctManutencao}% em oficina</p>
+                <p className="text-[10px] text-amber-500 font-semibold mt-0.5">{pctManutencao}% em oficina</p>
               </div>
               <div className="p-3 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20">
-                <Wrench size={22} />
+                <Wrench size={20} />
               </div>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 flex items-center justify-between backdrop-blur-md">
               <div>
-                <p className="text-[11px] font-semibold uppercase text-slate-500">Indisponíveis / Baixadas</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Indisponíveis / Baixadas</p>
                 <h3 className="text-2xl font-bold text-rose-400 mt-1">{baixadas}</h3>
-                <p className="text-[10px] text-rose-500 font-semibold mt-1">{pctBaixada}% fora de serviço</p>
+                <p className="text-[10px] text-rose-500 font-semibold mt-0.5">{pctBaixada}% fora de serviço</p>
               </div>
               <div className="p-3 bg-rose-500/10 text-rose-400 rounded-xl border border-rose-500/20">
-                <AlertTriangle size={22} />
+                <AlertTriangle size={20} />
               </div>
             </div>
           </div>
@@ -308,44 +312,44 @@ export default function DashboardCompanhiasPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             
             {/* CARD DE BARRA DE DISPONIBILIDADE GERAL */}
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5 lg:col-span-1 flex flex-col justify-between">
+            <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 lg:col-span-1 flex flex-col justify-between backdrop-blur-md">
               <div>
-                <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2 mb-1">
-                  <PieChart size={16} className="text-blue-500" />
+                <h3 className="text-xs font-bold text-slate-100 flex items-center gap-2 mb-0.5">
+                  <PieChart size={15} className="text-blue-500" />
                   Índice Operacional
                 </h3>
-                <p className="text-xs text-slate-400 mb-4">Saúde geral da frota no grupo selecionado</p>
+                <p className="text-[11px] text-slate-400 mb-3">Saúde geral da frota no grupo selecionado</p>
 
                 {/* Progress Bar Customizada */}
-                <div className="h-4 w-full bg-slate-900 rounded-full overflow-hidden flex p-0.5 border border-slate-800 mb-4">
+                <div className="h-3.5 w-full bg-slate-950 rounded-full overflow-hidden flex p-0.5 border border-slate-800/80 mb-3.5">
                   <div style={{ width: `${pctOperacional}%` }} className="bg-emerald-500 h-full rounded-l-full transition-all duration-500" title={`Operacional: ${pctOperacional}%`} />
                   <div style={{ width: `${pctManutencao}%` }} className="bg-amber-500 h-full transition-all duration-500" title={`Manutenção: ${pctManutencao}%`} />
                   <div style={{ width: `${pctBaixada}%` }} className="bg-rose-500 h-full rounded-r-full transition-all duration-500" title={`Baixada: ${pctBaixada}%`} />
                 </div>
 
-                <div className="space-y-2 text-xs">
+                <div className="space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-slate-300">
-                    <span className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Operacional
+                    <span className="flex items-center gap-2 text-[11px]">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" /> Operacional
                     </span>
-                    <span className="font-bold">{operacionais} ({pctOperacional}%)</span>
+                    <span className="font-bold text-[11px]">{operacionais} ({pctOperacional}%)</span>
                   </div>
                   <div className="flex items-center justify-between text-slate-300">
-                    <span className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> Manutenção
+                    <span className="flex items-center gap-2 text-[11px]">
+                      <span className="w-2 h-2 rounded-full bg-amber-500" /> Manutenção
                     </span>
-                    <span className="font-bold">{manutencao} ({pctManutencao}%)</span>
+                    <span className="font-bold text-[11px]">{manutencao} ({pctManutencao}%)</span>
                   </div>
                   <div className="flex items-center justify-between text-slate-300">
-                    <span className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Baixada
+                    <span className="flex items-center gap-2 text-[11px]">
+                      <span className="w-2 h-2 rounded-full bg-rose-500" /> Baixada
                     </span>
-                    <span className="font-bold">{baixadas} ({pctBaixada}%)</span>
+                    <span className="font-bold text-[11px]">{baixadas} ({pctBaixada}%)</span>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-800/80 text-[11px] text-slate-500 flex items-center justify-between">
+              <div className="pt-3 mt-3 border-t border-slate-800/80 text-[11px] text-slate-500 flex items-center justify-between">
                 <span>Meta Operacional: 85%</span>
                 <span className={pctOperacional >= 85 ? "text-emerald-400 font-bold" : "text-amber-400 font-bold"}>
                   {pctOperacional >= 85 ? "✓ Dentro da Meta" : "⚠ Atenção Necessária"}
@@ -354,14 +358,14 @@ export default function DashboardCompanhiasPage() {
             </div>
 
             {/* COMPARATIVO POR UNIDADE */}
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5 lg:col-span-2">
-              <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2 mb-1">
-                <TrendingUp size={16} className="text-blue-500" />
+            <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 lg:col-span-2 backdrop-blur-md">
+              <h3 className="text-xs font-bold text-slate-100 flex items-center gap-2 mb-0.5">
+                <TrendingUp size={15} className="text-blue-500" />
                 Comparativo por Unidade / Companhia
               </h3>
-              <p className="text-xs text-slate-400 mb-4">Proporção de viaturas operacionais por localidade</p>
+              <p className="text-[11px] text-slate-400 mb-3">Proporção de viaturas operacionais por localidade</p>
 
-              <div className="space-y-3 max-h-56 overflow-y-auto pr-1">
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                 {companhiasFiltradas.map((c) => {
                   const totalCia = c.viaturas.length;
                   const opCia = c.viaturas.filter((v) => v.status === "Operacional").length;
@@ -371,17 +375,17 @@ export default function DashboardCompanhiasPage() {
                     <div 
                       key={c.id} 
                       onClick={() => setCompanhiaSelecionada(c)}
-                      className="group cursor-pointer p-2 rounded-lg hover:bg-slate-900 border border-transparent hover:border-slate-800 transition-all"
+                      className="group cursor-pointer p-2 rounded-lg hover:bg-slate-950/60 border border-transparent hover:border-slate-800 transition-all"
                     >
                       <div className="flex items-center justify-between text-xs mb-1">
                         <span className="font-bold text-slate-200 group-hover:text-blue-400 transition-colors">
                           {c.nome}
                         </span>
-                        <span className="text-slate-400 font-mono">
+                        <span className="text-slate-400 font-mono text-[11px]">
                           {opCia}/{totalCia} operacionais ({pct}%)
                         </span>
                       </div>
-                      <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                      <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800/80">
                         <div 
                           style={{ width: `${pct}%` }} 
                           className={`h-full rounded-full transition-all duration-300 ${
@@ -398,26 +402,26 @@ export default function DashboardCompanhiasPage() {
           </div>
 
           {/* TABELA DE UNIDADES E DETALHES */}
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-5">
-            <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2 mb-4">
-              <Building2 size={16} className="text-blue-500" />
+          <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 backdrop-blur-md">
+            <h3 className="text-xs font-bold text-slate-100 flex items-center gap-2 mb-3">
+              <Building2 size={15} className="text-blue-500" />
               Detalhamento de Unidades ({companhiasFiltradas.length})
             </h3>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-500 uppercase font-semibold">
-                    <th className="py-2.5 px-3">Unidade / Cia</th>
-                    <th className="py-2.5 px-3">Comandante / Resp.</th>
-                    <th className="py-2.5 px-3 text-center">Total</th>
-                    <th className="py-2.5 px-3 text-center">Operacionais</th>
-                    <th className="py-2.5 px-3 text-center">Manutenção</th>
-                    <th className="py-2.5 px-3 text-center">Baixadas</th>
-                    <th className="py-2.5 px-3 text-right">Ação</th>
+                  <tr className="border-b border-slate-800/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider">
+                    <th className="py-2 px-3">Unidade / Cia</th>
+                    <th className="py-2 px-3">Comandante / Resp.</th>
+                    <th className="py-2 px-3 text-center">Total</th>
+                    <th className="py-2 px-3 text-center">Operacionais</th>
+                    <th className="py-2 px-3 text-center">Manutenção</th>
+                    <th className="py-2 px-3 text-center">Baixadas</th>
+                    <th className="py-2 px-3 text-right">Ação</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/50 text-slate-300">
                   {companhiasFiltradas.map((cia) => {
                     const total = cia.viaturas.length;
                     const op = cia.viaturas.filter((v) => v.status === "Operacional").length;
@@ -428,18 +432,18 @@ export default function DashboardCompanhiasPage() {
                       <tr 
                         key={cia.id}
                         onClick={() => setCompanhiaSelecionada(cia)}
-                        className="hover:bg-slate-900/80 cursor-pointer transition-colors"
+                        className="hover:bg-slate-950/50 cursor-pointer transition-colors"
                       >
-                        <td className="py-3 px-3">
-                          <p className="font-bold text-slate-100">{cia.nome}</p>
-                          <p className="text-[10px] text-slate-500">{cia.cidade}</p>
+                        <td className="py-2.5 px-3">
+                          <p className="font-semibold text-slate-100">{cia.nome}</p>
+                          <p className="text-[10px] text-slate-400">{cia.cidade}</p>
                         </td>
-                        <td className="py-3 px-3 text-slate-400">{cia.comandante}</td>
-                        <td className="py-3 px-3 text-center font-bold text-slate-200">{total}</td>
-                        <td className="py-3 px-3 text-center font-bold text-emerald-400">{op}</td>
-                        <td className="py-3 px-3 text-center font-bold text-amber-400">{man}</td>
-                        <td className="py-3 px-3 text-center font-bold text-rose-400">{baix}</td>
-                        <td className="py-3 px-3 text-right">
+                        <td className="py-2.5 px-3 text-slate-400">{cia.comandante}</td>
+                        <td className="py-2.5 px-3 text-center font-bold text-slate-200">{total}</td>
+                        <td className="py-2.5 px-3 text-center font-bold text-emerald-400">{op}</td>
+                        <td className="py-2.5 px-3 text-center font-bold text-amber-400">{man}</td>
+                        <td className="py-2.5 px-3 text-center font-bold text-rose-400">{baix}</td>
+                        <td className="py-2.5 px-3 text-right">
                           <button className="px-2.5 py-1 bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-all text-[11px] font-semibold">
                             Ver Viaturas
                           </button>
@@ -452,7 +456,7 @@ export default function DashboardCompanhiasPage() {
             </div>
           </div>
 
-        </div>
+        </ContentScrollArea>
 
         {/* MODAL COM A LISTA COMPLETA DE VEÍCULOS AO CLICAR EM UMA CIA */}
         {companhiaSelecionada && (
@@ -545,9 +549,7 @@ export default function DashboardCompanhiasPage() {
             </div>
           </div>
         )}
-
-      </main>
-
-    </div>
+      </MainContent>
+    </DashboardWrapper>
   );
 }
