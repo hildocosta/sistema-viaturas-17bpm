@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { Car, ChevronRight, ChevronLeft, Save, Edit3, ArrowLeft } from "lucide-react";
 
-import Sidebar from "@/components/sidebar";
+import Sidebar from "@/components/sidebar/page";
 import FormStepper from "@/components/viaturas/FormStepper"; 
 import EditViaturaModal from "@/components/viaturas/EditViaturaModal";
 import { DashboardWrapper, SidebarArea, MainContent, ContentScrollArea } from "@/components/ui/PageLayout";
