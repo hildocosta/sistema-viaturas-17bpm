@@ -22,18 +22,21 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  const closeMenu = () => setIsOpen(false);
 
-  const isRouteActive = (route) => {
-    if (
-      route === "/dashboard" || 
-      route === "/dashboard/viaturas" || 
-      route === "/dashboard/companhias" ||
-      route === "/dashboard/companhias/dashboard"
-    ) {
-      return pathname === route;
+  // Fecha o menu mobile e rola suavemente para o topo da página
+  const closeMenu = () => {
+    setIsOpen(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    return pathname.startsWith(route);
+  };
+
+  // Verificação precisa de rota ativa (suporta rotas exatas e sub-rotas)
+  const isRouteActive = (route) => {
+    if (route === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+    return pathname === route || pathname.startsWith(`${route}/`);
   };
 
   const menuItems = [
@@ -86,7 +89,7 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* 1. TOPO MÓVEL (Visível apenas em telemóveis - hidden em md:) */}
+      {/* 1. TOPO MÓVEL (Visível apenas em dispositivos móveis - hidden em md:) */}
       <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-4 py-3 sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <div className="p-1.5 bg-blue-600/10 border border-blue-500/20 rounded-xl">
@@ -107,14 +110,14 @@ export default function Sidebar() {
         {/* Botão Hambúrguer */}
         <button
           onClick={toggleMenu}
-          className="p-2 text-slate-300 hover:text-white bg-slate-800/80 rounded-lg border border-slate-700 transition"
+          className="p-2 text-slate-300 hover:text-white bg-slate-800/80 rounded-lg border border-slate-700 transition cursor-pointer"
           aria-label="Abrir menu"
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* 2. OVERLAY ESCURO (Para fechar ao clicar fora no telemóvel) */}
+      {/* 2. OVERLAY ESCURO (Para fechar ao clicar fora no mobile) */}
       {isOpen && (
         <div 
           onClick={closeMenu} 
@@ -122,7 +125,7 @@ export default function Sidebar() {
         />
       )}
 
-      {/* 3. SIDEBAR (Fixa em Desktop / Deslizante no Telemóvel) */}
+      {/* 3. SIDEBAR (Fixa em Desktop / Deslizante no Mobile) */}
       <aside
         className={`
           fixed md:relative top-0 left-0 z-50 md:z-auto
@@ -155,7 +158,7 @@ export default function Sidebar() {
           {/* Botão Fechar para Mobile dentro da Sidebar */}
           <div className="md:hidden flex justify-between items-center pb-4 mb-4 border-b border-slate-800">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Navegação</span>
-            <button onClick={closeMenu} className="text-slate-400 hover:text-white p-1">
+            <button onClick={closeMenu} className="text-slate-400 hover:text-white p-1 cursor-pointer">
               <X size={18} />
             </button>
           </div>

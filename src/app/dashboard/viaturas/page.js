@@ -112,8 +112,8 @@ export default function ListaViaturasPage() {
   };
 
   return (
-    <DashboardWrapper className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row">
-      <SidebarArea className="w-full md:w-64 shrink-0">
+    <DashboardWrapper className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row relative">
+      <SidebarArea className="w-full md:w-64 shrink-0 z-30">
         <Sidebar />
       </SidebarArea>
 
