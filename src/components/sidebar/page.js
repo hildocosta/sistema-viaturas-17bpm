@@ -10,6 +10,7 @@ import {
   Building2,
   BarChart3,
   PlusCircle, 
+  QrCode,
   Wrench, 
   LogOut,
   ChevronRight,
@@ -29,7 +30,8 @@ export default function Sidebar() {
       route === "/dashboard" || 
       route === "/dashboard/viaturas" || 
       route === "/dashboard/companhias" ||
-      route === "/dashboard/companhias/dashboard"
+      route === "/dashboard/companhias/dashboard" ||
+      route === "/checkin"
     ) {
       return pathname === route;
     }
@@ -64,6 +66,11 @@ export default function Sidebar() {
           nome: "Dashboard Cias",
           icone: BarChart3,
           href: "/dashboard/companhias/dashboard"
+        },
+        {
+          nome: "Check-in QR Code",
+          icone: QrCode,
+          href: "/checkin"
         },
         {
           nome: "Nova Viatura",
