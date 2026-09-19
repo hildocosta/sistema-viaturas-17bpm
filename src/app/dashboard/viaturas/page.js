@@ -10,14 +10,6 @@ import ViaturaCard from "@/components/viaturas/ViaturaCard";
 import ViaturasTable from "@/components/viaturas/ViaturasTable";
 import EditViaturaModal from "@/components/viaturas/EditViaturaModal";
 
-import { 
-  DashboardWrapper, 
-  SidebarArea, 
-  MainContent, 
-  ContentScrollArea, 
-  CardsGrid 
-} from "@/components/ui/PageLayout";
-
 import { PageHeader } from "@/components/ui/PageHeader";
 import { LoadingState, EmptyState } from "@/components/ui/StateFeedback";
 import { PrimaryButton } from "@/components/ui/Button";
@@ -101,7 +93,6 @@ export default function ListaViaturasPage() {
     }).format(valor || 0);
   };
 
-  // Recebe os dados do formulário do modal para atualizar a lista local
   const handleSalvarEdicao = (dadosAtualizados) => {
     setViaturas((prev) =>
       prev.map((item) => 
@@ -112,78 +103,85 @@ export default function ListaViaturasPage() {
   };
 
   return (
-    <DashboardWrapper className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row relative">
-      <SidebarArea className="w-full md:w-64 shrink-0 z-30">
+    <div className="flex flex-col lg:flex-row h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans p-2 sm:p-4 gap-3 sm:gap-4 antialiased">
+      
+      {/* Sidebar oculta em dispositivos móveis (O Topo Móvel interno do Sidebar assume no mobile) */}
+      <div className="hidden lg:block lg:w-80 h-full shrink-0">
         <Sidebar />
-      </SidebarArea>
+      </div>
 
-      <MainContent className="flex-1 flex flex-col min-w-0 w-full p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
-        {/* Cabeçalho Responsivo */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/80">
-          <PageHeader
-            icon={Car}
-            title="Frota de Viaturas"
-            description="Gestão de veículos, controle de rodagem e prontidão operacional."
-          />
-          <div className="w-full sm:w-auto shrink-0">
-            <Link href="/dashboard/viaturas/nova" className="block w-full">
-              <PrimaryButton icon={Plus} className="w-full sm:w-auto justify-center">
-                Nova Viatura
-              </PrimaryButton>
-            </Link>
+      {/* Conteúdo Principal */}
+      <main className="flex-1 h-full bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-800 p-3 sm:p-6 flex flex-col overflow-y-auto relative min-w-0">
+        <div className="max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
+          
+          {/* Cabeçalho Responsivo */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/80">
+            <PageHeader
+              icon={Car}
+              title="Frota de Viaturas"
+              description="Gestão de veículos, controle de rodagem e prontidão operacional."
+            />
+            <div className="w-full sm:w-auto shrink-0">
+              <Link href="/dashboard/viaturas/nova" className="block w-full">
+                <PrimaryButton icon={Plus} className="w-full sm:w-auto justify-center">
+                  Nova Viatura
+                </PrimaryButton>
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* Filtros e Seleção de Visualização */}
-        <div className="w-full overflow-x-auto pb-1">
-          <ViaturaFilters 
-            busca={busca}
-            setBusca={setBusca}
-            filtroStatus={filtroStatus}
-            setFiltroStatus={setFiltroStatus}
-            filtroSubunidade={filtroSubunidade}
-            setFiltroSubunidade={setFiltroSubunidade}
-            subunidades={subunidades}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            totalResultados={viaturasFiltradas.length}
-          />
-        </div>
+          {/* Filtros e Seleção de Visualização */}
+          <div className="w-full overflow-x-auto pb-1">
+            <ViaturaFilters 
+              busca={busca}
+              setBusca={setBusca}
+              filtroStatus={filtroStatus}
+              setFiltroStatus={setFiltroStatus}
+              filtroSubunidade={filtroSubunidade}
+              setFiltroSubunidade={setFiltroSubunidade}
+              subunidades={subunidades}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              totalResultados={viaturasFiltradas.length}
+            />
+          </div>
 
-        {/* Área de Conteúdo Rolável */}
-        <ContentScrollArea className="flex-1 min-h-0 w-full">
-          {loading ? (
-            <div className="py-12 flex justify-center items-center">
-              <LoadingState message="Carregando frota de viaturas..." />
-            </div>
-          ) : viaturasFiltradas.length === 0 ? (
-            <div className="py-12">
-              <EmptyState 
-                title="Nenhuma viatura encontrada" 
-                description="Tente ajustar os termos de pesquisa ou remover os filtros aplicados." 
-              />
-            </div>
-          ) : viewMode === "grid" ? (
-            <CardsGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {viaturasFiltradas.map((item) => (
-                <ViaturaCard 
-                  key={item.id} 
-                  item={item} 
-                  formatarMoeda={formatarMoeda}
-                  onEdit={setViaturaParaEditar}
+          {/* Conteúdo das Viaturas */}
+          <div className="w-full">
+            {loading ? (
+              <div className="py-12 flex justify-center items-center">
+                <LoadingState message="Carregando frota de viaturas..." />
+              </div>
+            ) : viaturasFiltradas.length === 0 ? (
+              <div className="py-12">
+                <EmptyState 
+                  title="Nenhuma viatura encontrada" 
+                  description="Tente ajustar os termos de pesquisa ou remover os filtros aplicados." 
                 />
-              ))}
-            </CardsGrid>
-          ) : (
-            <div className="w-full overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 shadow-sm">
-              <ViaturasTable 
-                viaturas={viaturasFiltradas} 
-                formatarMoeda={formatarMoeda} 
-                onEdit={setViaturaParaEditar} 
-              />
-            </div>
-          )}
-        </ContentScrollArea>
+              </div>
+            ) : viewMode === "grid" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                {viaturasFiltradas.map((item) => (
+                  <ViaturaCard 
+                    key={item.id} 
+                    item={item} 
+                    formatarMoeda={formatarMoeda}
+                    onEdit={setViaturaParaEditar}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="w-full overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 shadow-sm">
+                <ViaturasTable 
+                  viaturas={viaturasFiltradas} 
+                  formatarMoeda={formatarMoeda} 
+                  onEdit={setViaturaParaEditar} 
+                />
+              </div>
+            )}
+          </div>
+
+        </div>
 
         {/* Modal de Edição */}
         <EditViaturaModal 
@@ -191,7 +189,7 @@ export default function ListaViaturasPage() {
           setViaturaParaEditar={setViaturaParaEditar} 
           handleSalvarEdicao={handleSalvarEdicao} 
         />
-      </MainContent>
-    </DashboardWrapper>
+      </main>
+    </div>
   );
 }

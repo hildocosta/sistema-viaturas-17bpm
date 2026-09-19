@@ -3,11 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/sidebar/page";
 import { 
-  DashboardWrapper, 
-  SidebarArea, 
-  MainContent, 
-  ContentScrollArea, 
-  CardsGrid,
   DashboardCard,
   LoadingScreen,
   HeaderActionButton
@@ -159,39 +154,41 @@ export default function DashboardPrincipalPage() {
   if (loading) return <LoadingScreen mensagem="Carregando painel de controle..." />;
 
   return (
-    <DashboardWrapper className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row">
-      <SidebarArea className="w-full md:w-64 shrink-0">
+    <div className="flex flex-col lg:flex-row h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans p-2 sm:p-4 gap-3 sm:gap-4 antialiased">
+      
+      {/* Sidebar oculta em dispositivos móveis */}
+      <div className="hidden lg:block lg:w-80 h-full shrink-0">
         <Sidebar />
-      </SidebarArea>
+      </div>
 
-      <MainContent className="flex-1 flex flex-col min-w-0 w-full p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
-        {/* Cabeçalho Responsivo */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 sm:pb-4 border-b border-slate-800/80 shrink-0">
-          <div>
-            <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 tracking-tight">
-              <ShieldCheck className="text-blue-500 shrink-0" size={22} />
-              <span>Painel de Controle de Frota</span>
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Visão consolidada da operacionalidade, custos operacionais e revisões.
-            </p>
-          </div>
-
-          <div className="w-full sm:w-auto shrink-0">
-            <Link href="/dashboard/viaturas/nova" className="w-full sm:w-auto block">
-              <HeaderActionButton variant="primary" className="w-full sm:w-auto justify-center text-xs sm:text-sm py-2">
-                <Plus size={16} />
-                <span>Nova Viatura</span>
-              </HeaderActionButton>
-            </Link>
-          </div>
-        </div>
-
-        {/* Área Rolar Conteúdo */}
-        <ContentScrollArea className="space-y-4 sm:space-y-6 w-full flex-1 min-h-0">
+      {/* Conteúdo Principal */}
+      <main className="flex-1 h-full bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-800 p-3 sm:p-6 flex flex-col overflow-y-auto relative min-w-0">
+        <div className="max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
           
+          {/* Cabeçalho Responsivo */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 sm:pb-4 border-b border-slate-800/80 shrink-0">
+            <div>
+              <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 tracking-tight">
+                <ShieldCheck className="text-blue-500 shrink-0" size={22} />
+                <span>Painel de Controle de Frota</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                Visão consolidada da operacionalidade, custos operacionais e revisões.
+              </p>
+            </div>
+
+            <div className="w-full sm:w-auto shrink-0">
+              <Link href="/dashboard/viaturas/nova" className="w-full sm:w-auto block">
+                <HeaderActionButton variant="primary" className="w-full sm:w-auto justify-center text-xs sm:text-sm py-2">
+                  <Plus size={16} />
+                  <span>Nova Viatura</span>
+                </HeaderActionButton>
+              </Link>
+            </div>
+          </div>
+
           {/* CARDS SUPERIORES - MÉTRICAS PRINCIPAIS */}
-          <CardsGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* Card 1: Taxa Operacional */}
             <DashboardCard>
@@ -315,7 +312,7 @@ export default function DashboardPrincipalPage() {
               </div>
             </DashboardCard>
 
-          </CardsGrid>
+          </div>
 
           {/* SEÇÃO INTERMEDIÁRIA: REVISÕES E MANUTENÇÕES */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
@@ -391,7 +388,6 @@ export default function DashboardPrincipalPage() {
                       key={os.id} 
                       className="bg-slate-950/40 border border-slate-800/80 hover:border-slate-700 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
                     >
-                      {/* Prefixo, Oficina e Descrição */}
                       <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
                         <span className="font-mono font-bold text-white text-xs bg-slate-900 px-2.5 py-1 rounded border border-slate-800 shrink-0 mt-0.5 sm:mt-0">
                           {os.prefixo}
@@ -411,7 +407,6 @@ export default function DashboardPrincipalPage() {
                         </div>
                       </div>
 
-                      {/* Valor e Status */}
                       <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800/50 shrink-0">
                         <span className="font-mono font-bold text-emerald-400 text-xs sm:text-sm tracking-tight">
                           {formatarMoeda(os.valor)}
@@ -426,7 +421,6 @@ export default function DashboardPrincipalPage() {
                           <span>{os.status}</span>
                         </span>
                       </div>
-
                     </div>
                   ))}
                 </div>
@@ -442,9 +436,8 @@ export default function DashboardPrincipalPage() {
 
           </div>
 
-        </ContentScrollArea>
-
-      </MainContent>
-    </DashboardWrapper>
+        </div>
+      </main>
+    </div>
   );
 }
