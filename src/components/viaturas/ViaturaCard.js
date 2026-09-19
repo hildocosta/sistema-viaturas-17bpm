@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Building2, Gauge, DollarSign, ChevronRight, Pencil } from "lucide-react";
+import { Building2, Gauge, DollarSign, ChevronRight, Pencil, Car } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 export default function ViaturaCard({ item, formatarMoeda, onEdit }) {
@@ -23,30 +23,37 @@ export default function ViaturaCard({ item, formatarMoeda, onEdit }) {
   const kmAtual = item.km !== undefined && item.km !== null ? item.km : item.kmAtual;
 
   return (
-    <div className="bg-slate-950/60 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 flex flex-col justify-between transition-all group">
+    <div className="bg-slate-950/60 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 flex flex-col justify-between transition-all group shadow-md hover:shadow-xl">
       <div>
-        {/* Cabeçalho do Card: Corrigido para não empilhar/esmagar no mobile */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-          <span className="text-lg font-bold text-white font-mono tracking-tight group-hover:text-blue-400 transition-colors">
-            {item.prefixo || "Sem Prefixo"}
-          </span>
+        {/* Cabeçalho do Card: Prefixo Destacado + Status */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5">
+          
+          {/* Badge de Destaque do Prefixo */}
+          <div className="inline-flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3 py-1.5 rounded-xl self-start">
+            <Car size={16} className="text-blue-400 shrink-0" />
+            <span className="text-base font-extrabold text-white font-mono tracking-wider">
+              {item.prefixo || "S/ PREF"}
+            </span>
+          </div>
+
+          {/* Status com posição ajustada */}
           <div className="self-start sm:self-auto max-w-full">
             <StatusBadge status={item.status} />
           </div>
         </div>
 
         {/* Modelo e Placa / Ano */}
-        <div className="space-y-1.5 mb-4">
-          <p className="text-xs font-semibold text-slate-200">
+        <div className="space-y-1.5 mb-4 pl-0.5">
+          <p className="text-sm font-semibold text-slate-100">
             {item.modelo || "Modelo não informado"}
           </p>
-          <div className="flex items-center gap-3 text-[11px] text-slate-400">
+          <div className="flex items-center gap-3 text-xs text-slate-400">
             <span className="font-mono">
-              Placa: <strong className="text-slate-300">{item.placa || "N/A"}</strong>
+              Placa: <strong className="text-slate-200">{item.placa || "N/A"}</strong>
             </span>
             <span>•</span>
             <span>
-              Ano: <strong className="text-slate-300">{formatarAno()}</strong>
+              Ano: <strong className="text-slate-200">{formatarAno()}</strong>
             </span>
           </div>
         </div>
@@ -94,7 +101,7 @@ export default function ViaturaCard({ item, formatarMoeda, onEdit }) {
         <Link href={`/dashboard/viaturas/${item.id}`} className="flex-1">
           <button 
             type="button" 
-            className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold py-2 rounded-xl transition-all cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold py-2.5 rounded-xl transition-all cursor-pointer"
           >
             Prontuário
             <ChevronRight size={14} className="text-slate-500 group-hover:translate-x-0.5 transition-transform" />
@@ -109,7 +116,7 @@ export default function ViaturaCard({ item, formatarMoeda, onEdit }) {
             if (onEdit) onEdit(item);
           }}
           title="Editar Viatura"
-          className="p-2 bg-slate-900 hover:bg-amber-600/20 text-slate-400 hover:text-amber-400 border border-slate-800 hover:border-amber-500/30 rounded-xl transition-all cursor-pointer"
+          className="p-2.5 bg-slate-900 hover:bg-amber-600/20 text-slate-400 hover:text-amber-400 border border-slate-800 hover:border-amber-500/30 rounded-xl transition-all cursor-pointer"
         >
           <Pencil size={15} />
         </button>
