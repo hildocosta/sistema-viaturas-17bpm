@@ -172,9 +172,9 @@ export default function DashboardPrincipalPage() {
               <ShieldCheck className="text-blue-500 shrink-0" size={24} />
               <span>Painel de Controle de Frota</span>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Visão consolidada da operacionalidade, custos operacionais e revisões.
-            </p>
+           <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+            17º Batalhão de Polícia Militar — Gestão da Frota.
+           </p>
           </div>
 
           <div className="w-full sm:w-auto shrink-0">
