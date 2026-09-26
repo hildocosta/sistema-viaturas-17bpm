@@ -56,7 +56,7 @@ export default function ModalDetalhesEvento({ evento, onClose }) {
         {/* Conteúdo Rolável */}
         <div className="overflow-y-auto pr-1 space-y-4 flex-1">
           {/* Título do Evento */}
-          <h3 className="text-base sm:text-lg font-bold text-white leading-snug break-words">
+          <h3 className="text-base sm:text-lg font-bold text-white leading-snug wrap-break-word">
             {evento.titulo}
           </h3>
 
@@ -83,7 +83,7 @@ export default function ModalDetalhesEvento({ evento, onClose }) {
             <span className="text-[10px] text-slate-500 uppercase font-semibold block mb-1">
               Descrição e Observações Técnicas
             </span>
-            <div className="bg-slate-950/40 border border-slate-800/60 rounded-xl p-3 text-xs text-slate-300 leading-relaxed max-h-40 overflow-y-auto whitespace-pre-line break-words">
+            <div className="bg-slate-950/40 border border-slate-800/60 rounded-xl p-3 text-xs text-slate-300 leading-relaxed max-h-40 overflow-y-auto whitespace-pre-line wrap-break-word">
               {evento.descricao || "Nenhuma observação detalhada foi informada."}
             </div>
           </div>

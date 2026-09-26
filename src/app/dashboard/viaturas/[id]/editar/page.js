@@ -29,14 +29,15 @@ const STEPS = [
 export default function EditarViaturaPage() {
   const router = useRouter();
   const params = useParams();
-  const viaturaId = params?.id;
+  
+  const viaturaId = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [sucesso, setSucesso] = useState(false);
   const [viaturaParaEditar, setViaturaParaEditar] = useState(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     id: viaturaId || "1",
     prefixo: "M-1701",
     tipoViatura: "Rádio Patrulha (RPA)",
@@ -51,7 +52,7 @@ export default function EditarViaturaPage() {
     situacao: "Operacional",
     status: "Pronta",
     observacoes: "Veículo com revisão em dia. Possui protetor de cárter reforçado e sinalizador em LED."
-  });
+  }));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,7 +82,7 @@ export default function EditarViaturaPage() {
       setSucesso(true);
 
       setTimeout(() => {
-        router.push(`/dashboard/viaturas/${viaturaId}`);
+        router.push(`/dashboard/viaturas/${viaturaId || "1"}`);
       }, 1500);
     }, 800);
   };
@@ -101,7 +102,7 @@ export default function EditarViaturaPage() {
             description="17º Batalhão de Polícia Militar — Atualização de Ficha de Cadastro"
             action={
               <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                <Link href={`/dashboard/viaturas/${viaturaId}`} className="w-full sm:w-auto">
+                <Link href={`/dashboard/viaturas/${viaturaId || "1"}`} className="w-full sm:w-auto">
                   <SecondaryButton icon={ArrowLeft} className="w-full justify-center">
                     Voltar
                   </SecondaryButton>
@@ -136,9 +137,9 @@ export default function EditarViaturaPage() {
               />
             )}
 
-            {/* Formulário com Animações / Card Adaptativo */}
+            {/* Formulário de Etapas */}
             <form onSubmit={currentStep === 3 ? handleSubmit : handleNext} className="space-y-4">
-              <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 sm:p-6 min-h-[320px] backdrop-blur-md">
+              <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-4 sm:p-6 min-h-80 backdrop-blur-md">
                 {currentStep === 1 && (
                   <StepIdentificacao formData={formData} handleChange={handleChange} />
                 )}
@@ -150,7 +151,7 @@ export default function EditarViaturaPage() {
                 )}
               </div>
 
-              {/* Controles de Navegação Flutuantes / Responsivos */}
+              {/* Controles de Navegação */}
               <div className="flex items-center justify-between gap-3 pt-2">
                 <SecondaryButton
                   type="button"

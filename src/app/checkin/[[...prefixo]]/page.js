@@ -12,7 +12,34 @@ export default function CheckinPage() {
     ? params.prefixo[0] 
     : params?.prefixo;
 
-  const [prefixo, setPrefixo] = useState(prefixoParam || "");
+  // Função para tratar URLs longas do Google Drive ou links diretos
+  const limparPrefixo = (valorLido) => {
+    if (!valorLido) return "";
+    let texto = decodeURIComponent(valorLido).trim();
+
+    if (texto.includes("/checkin/")) {
+      const partes = texto.split("/checkin/");
+      texto = partes[partes.length - 1].replace(/\//g, "");
+    } else if (texto.includes("http://") || texto.includes("https://")) {
+      try {
+        const urlObj = new URL(texto);
+        const paramPrefixo = urlObj.searchParams.get("prefixo");
+        if (paramPrefixo) {
+          texto = paramPrefixo;
+        } else {
+          const partesPath = urlObj.pathname.split("/").filter(Boolean);
+          texto = partesPath[partesPath.length - 1] || texto;
+        }
+      } catch (e) {
+        // Fallback caso falhe a leitura da URL
+      }
+    }
+
+    return texto.toUpperCase().trim();
+  };
+
+  // Se veio parâmetro na URL, passa limpo na inicialização do estado
+  const [prefixo, setPrefixo] = useState(() => limparPrefixo(prefixoParam) || "");
   const [km, setKm] = useState("");
   const [loading, setLoading] = useState(false);
   const [sucesso, setSucesso] = useState(false);
@@ -20,12 +47,6 @@ export default function CheckinPage() {
 
   const [scanning, setScanning] = useState(false);
   const html5QrcodeRef = useRef(null);
-
-  const [prevParam, setPrevParam] = useState(prefixoParam);
-  if (prefixoParam !== prevParam) {
-    setPrevParam(prefixoParam);
-    setPrefixo(prefixoParam || "");
-  }
 
   const startScanner = async () => {
     setErro("");
@@ -52,13 +73,7 @@ export default function CheckinPage() {
   };
 
   const extrairPrefixoEParar = (valorLido) => {
-    let prefixoDetectado = valorLido;
-
-    if (valorLido.includes("/checkin/")) {
-      const partes = valorLido.split("/checkin/");
-      prefixoDetectado = partes[partes.length - 1].replace(/\//g, "");
-    }
-
+    const prefixoDetectado = limparPrefixo(valorLido);
     setPrefixo(prefixoDetectado);
     stopScanner();
   };
@@ -135,12 +150,12 @@ export default function CheckinPage() {
         {/* Leitor QR Code ativado */}
         {scanning ? (
           <div className="mb-5 space-y-3">
-            <div className="relative overflow-hidden rounded-xl border border-blue-500/50 bg-black min-h-[260px]">
+            <div className="relative overflow-hidden rounded-xl border border-blue-500/50 bg-black min-h-65">
               <div id="reader" className="w-full h-full"></div>
               <button
                 type="button"
                 onClick={stopScanner}
-                className="absolute top-3 right-3 p-2 bg-slate-900/80 text-white rounded-full border border-slate-700 hover:bg-slate-800 z-10"
+                className="absolute top-3 right-3 p-2 bg-slate-900/80 text-white rounded-full border border-slate-700 hover:bg-slate-800 z-10 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -148,12 +163,12 @@ export default function CheckinPage() {
             <p className="text-xs text-center text-slate-400">Aponte a câmara para o QR Code da viatura</p>
           </div>
         ) : (
-          /* Se já tiver um prefixo (lido via QR Code), exibe o card da viatura */
+          /* Card da Viatura Identificada */
           prefixo ? (
-            <div className="bg-blue-950/40 rounded-xl p-3.5 mb-5 border border-blue-500/30 shadow-inner flex items-center justify-between gap-2">
-              <div className="text-left pl-1">
+            <div className="bg-blue-950/40 rounded-xl p-3.5 mb-5 border border-blue-500/30 shadow-inner flex items-center justify-between gap-2 overflow-hidden">
+              <div className="text-left pl-1 min-w-0 flex-1 pr-2">
                 <span className="text-[10px] font-bold text-blue-400/80 uppercase tracking-widest block mb-0.5">Viatura Identificada</span>
-                <span className="text-2xl sm:text-3xl font-black text-blue-400 tracking-wider font-mono">
+                <span className="text-xl sm:text-2xl font-black text-blue-400 tracking-wider font-mono break-all block">
                   {prefixo}
                 </span>
               </div>
@@ -161,14 +176,13 @@ export default function CheckinPage() {
               <button
                 type="button"
                 onClick={startScanner}
-                className="flex items-center gap-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-3 py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                className="flex items-center gap-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-3 py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 cursor-pointer shrink-0"
               >
                 <Camera className="w-4 h-4" />
                 <span>Trocar</span>
               </button>
             </div>
           ) : (
-            /* Se NÃO tiver prefixo, mostra o botão principal para ler o QR Code */
             <div className="mb-5">
               <button
                 type="button"
@@ -192,7 +206,7 @@ export default function CheckinPage() {
             <div className="space-y-1">
               <h2 className="text-lg font-bold text-emerald-400">KM Registrado com Sucesso!</h2>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed px-2">
-                A quilometragem da viatura <span className="font-bold text-white font-mono">{prefixo}</span> foi atualizada para <span className="font-bold text-emerald-400 font-mono">{km} KM</span>.
+                A quilometragem da viatura <span className="font-bold text-white font-mono break-all">{prefixo}</span> foi atualizada para <span className="font-bold text-emerald-400 font-mono">{km} KM</span>.
               </p>
             </div>
 
@@ -210,7 +224,7 @@ export default function CheckinPage() {
             </button>
           </div>
         ) : (
-          /* Formulário (exibe o KM após escanear ou instrui a escanear) */
+          /* Formulário de Envio */
           <form onSubmit={handleSubmit} className="space-y-4">
             {erro && (
               <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3 rounded-xl text-xs sm:text-sm flex items-start gap-2.5 animate-in fade-in duration-150">
@@ -219,7 +233,6 @@ export default function CheckinPage() {
               </div>
             )}
 
-            {/* Campo KM */}
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
                 KM Atual no Painel <span className="text-rose-400">*</span>
@@ -240,7 +253,6 @@ export default function CheckinPage() {
               </div>
             </div>
 
-            {/* Botão de Envio */}
             <button
               type="submit"
               disabled={loading || !km || !prefixo}

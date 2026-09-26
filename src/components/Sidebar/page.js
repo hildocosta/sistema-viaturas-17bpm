@@ -93,7 +93,7 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* 1. CABEÇALHO MÓVEL (100% da largura, cola no topo do ecrã) */}
+      {/* 1. CABEÇALHO MÓVEL (100% da largura, cola no topo da tela) */}
       <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-4 py-3 w-full sticky top-0 left-0 right-0 z-40">
         <div className="flex items-center gap-3">
           <div className="p-1.5 bg-blue-600/10 border border-blue-500/20 rounded-xl">
@@ -133,7 +133,7 @@ export default function Sidebar() {
       <aside
         className={`
           fixed md:relative top-0 left-0 z-50 md:z-auto
-          w-[280px] sm:w-80 md:w-full h-full min-h-screen md:min-h-0 bg-slate-900 
+          w-70 sm:w-80 md:w-full h-full min-h-screen md:min-h-0 bg-slate-900 
           border-r md:border border-slate-800 md:rounded-2xl p-4 
           flex flex-col justify-between select-none
           transition-transform duration-300 ease-in-out
@@ -156,7 +156,7 @@ export default function Sidebar() {
               <h1 className="text-sm font-bold text-white tracking-tight">17º BPM</h1>
               <p className="text-[10px] text-slate-400 font-mono">Gestão Operacional</p>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-500/40 to-transparent" />
           </div>
 
           {/* Cabeçalho Fechar no Telemóvel */}
@@ -210,7 +210,7 @@ export default function Sidebar() {
 
         {/* Rodapé da Sidebar - Usuário & Sair */}
         <div className="relative pt-4 mt-auto">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-slate-700/60 to-transparent mb-3" />
 
           <div className="flex items-center justify-between px-3 py-2 bg-slate-950/60 border border-slate-800/80 rounded-xl">
             <div className="min-w-0">

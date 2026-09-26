@@ -90,7 +90,7 @@ export function StepEspecificacoes({ formData, handleChange }) {
         </h2>
       </div>
 
-      {/* Grid de Formulário Responsivo (1 col em mobile, 2 col em telas médias) */}
+      {/* Grid de Formulário Responsivo */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
         {/* Placa */}
         <div>
@@ -245,7 +245,7 @@ export function StepCondicoes({ formData, handleChange }) {
             placeholder="Informe detalhes sobre equipamentos instalados (giroflex, radiocomunicação, blindagem) ou avarias mecânicas/estéticas iniciais..."
             value={formData.observacoes || ""}
             onChange={handleChange}
-            className="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600 resize-none transition-colors min-h-[100px]"
+            className="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-600 resize-none transition-colors min-h-25"
           />
         </div>
       </div>

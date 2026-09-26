@@ -68,7 +68,7 @@ export default function ViaturaCard({ item, formatarMoeda, onEdit }) {
             <Building2 size={13} className="text-slate-500 shrink-0" />
             Subunidade
           </span>
-          <span className="font-semibold text-slate-200 leading-snug break-words pl-5">
+          <span className="font-semibold text-slate-200 leading-snug wrap-break-word pl-5">
             {item.subunidade || "Não atribuída"}
           </span>
         </div>

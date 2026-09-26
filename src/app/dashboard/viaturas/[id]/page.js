@@ -37,7 +37,7 @@ import { formatarMoeda, gerarPDFProntuario } from "@/app/utils/pdfGenerator";
 
 export default function ProntuarioViaturaPage({ params }) {
   const resolvedParams = use(params);
-  const id = resolvedParams.id;
+  const id = resolvedParams?.id;
 
   const [viatura, setViatura] = useState(null);
   const [historico, setHistorico] = useState([]);
@@ -159,7 +159,7 @@ export default function ProntuarioViaturaPage({ params }) {
             </div>
           </div>
 
-          {/* BOTÕES DE AÇÃO LADO A LADO NO MOBILE */}
+          {/* BOTÕES DE AÇÃO */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="flex-1 sm:flex-none">
               <HeaderActionButton 
@@ -185,7 +185,7 @@ export default function ProntuarioViaturaPage({ params }) {
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS COM SCROLL HORIZONTAL MOBILE */}
+        {/* NAVEGAÇÃO POR ABAS */}
         <div className="flex items-center gap-1.5 border-b border-slate-800 overflow-x-auto pb-2 mb-3 sm:mb-4 no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
           {abas.map((aba) => {
             const Icon = aba.icon;
@@ -241,7 +241,7 @@ export default function ProntuarioViaturaPage({ params }) {
                     <div className="space-y-2">
                       <div className="flex items-start gap-2 text-xs text-slate-200">
                         <Building2 size={15} className="text-blue-400 shrink-0 mt-0.5" />
-                        <span className="font-semibold leading-snug break-words">
+                        <span className="font-semibold leading-snug wrap-break-word">
                           {viatura.subunidade || "Não atribuída"}
                         </span>
                       </div>
@@ -287,7 +287,7 @@ export default function ProntuarioViaturaPage({ params }) {
                   <h3 className="text-[11px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
                     <Info size={14} /> Observações Registradas
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/40 p-3 rounded-lg border border-slate-800/50 font-mono break-words">
+                  <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/40 p-3 rounded-lg border border-slate-800/50 font-mono wrap-break-word">
                     {viatura.observacao}
                   </p>
                 </div>
@@ -340,11 +340,11 @@ export default function ProntuarioViaturaPage({ params }) {
                 </div>
                 <div className="bg-slate-950/40 p-2.5 sm:p-3 rounded-lg border border-slate-800/50 space-y-0.5 col-span-2 sm:col-span-1">
                   <span className="text-slate-400 block text-[10px] sm:text-[11px]">Chassi</span>
-                  <span className="text-slate-100 font-mono break-all">{viatura.chassi || "N/A"}</span>
+                  <span className="text-slate-100 font-mono wrap-break-word">{viatura.chassi || "N/A"}</span>
                 </div>
                 <div className="bg-slate-950/40 p-2.5 sm:p-3 rounded-lg border border-slate-800/50 space-y-0.5 col-span-2 sm:col-span-2 lg:col-span-2">
                   <span className="text-slate-400 block text-[10px] sm:text-[11px]">RENAVAM</span>
-                  <span className="text-slate-100 font-mono break-all">{viatura.renavam || "N/A"}</span>
+                  <span className="text-slate-100 font-mono wrap-break-word">{viatura.renavam || "N/A"}</span>
                 </div>
               </div>
             </div>
